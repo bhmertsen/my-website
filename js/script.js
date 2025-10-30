@@ -1,4 +1,41 @@
 document.addEventListener('DOMContentLoaded', function(){
+  // Toggle menu functionality
+  const menuToggle = document.querySelector('.menu-toggle');
+  const menuIcon = document.querySelector('.menu-icon');
+  const closeIcon = document.querySelector('.close-icon');
+  const sidebar = document.querySelector('.sidebar');
+  
+  if(menuToggle && sidebar) {
+    menuToggle.addEventListener('click', function() {
+      const isOpen = document.body.classList.contains('sidebar-open');
+      
+      if(isOpen) {
+        // Close menu
+        document.body.classList.remove('sidebar-open');
+        menuIcon.style.display = 'block';
+        closeIcon.style.display = 'none';
+        menuToggle.setAttribute('aria-expanded', 'false');
+      } else {
+        // Open menu
+        document.body.classList.add('sidebar-open');
+        menuIcon.style.display = 'none';
+        closeIcon.style.display = 'block';
+        menuToggle.setAttribute('aria-expanded', 'true');
+      }
+    });
+  }
+
+  // Close menu when clicking outside
+  document.addEventListener('click', function(event) {
+    const isOpen = document.body.classList.contains('sidebar-open');
+    if(isOpen && !sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
+      document.body.classList.remove('sidebar-open');
+      menuIcon.style.display = 'block';
+      closeIcon.style.display = 'none';
+      menuToggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
   // Small interaction: toggle submenus in sidebar
   document.querySelectorAll('.side-menu .has-sub').forEach(function(el){
     el.addEventListener('click', function(){

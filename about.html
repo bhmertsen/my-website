@@ -22,17 +22,59 @@
     </aside>
 
     <div class="main-area">
-      <header class="top-nav"></header>
+      <header class="top-nav">
+        <div class="container">
+          <div class="nav-left">
+            <button class="menu-toggle" aria-label="Menüyü aç" aria-expanded="false">
+              <span class="menu-icon">☰</span>
+              <span class="close-icon" style="display:none">✕</span>
+            </button>
+            <a href="index.html" class="home-button">Ana Sayfa</a>
+          </div>
+          <ul class="top-links">
+            <li><a href="index.html">ANA SAYFA</a></li>
+            <li><a href="about.html">ÖZGEÇMİŞ</a></li>
+            <li><a href="news.html">HABERLER</a></li>
+            <li><a href="https://iyiparti.org.tr">İYİ PARTİ</a></li>
+          </ul>
+        </div>
+      </header>
       <main class="container about-page">
         <h1>Özgeçmiş</h1>
-        <p>Buraya detaylı özgeçmiş bilgileri eklenecek. Bu MVP sürümünde içerik örnek olarak bırakılmıştır.</p>
-        <h3>Eğitim</h3>
-        <p>Ankara Aydınlıkevler Lisesi mezunu.</p>
-        <h3>Deneyim</h3>
-        <p>TBMM çalışmaları ve yerel ziyaretler.</p>
+        
+        <div class="biography-section">
+          <div class="bio-card">
+            <h2>Eğitim ve Akademik Kariyeri</h2>
+            <ul class="timeline">
+              <li>27 Kasım 1989'da Manisa'da doğdu.</li>
+              <li>İlk ve orta öğretimini memleketi Manisa'da tamamladı.</li>
+              <li>Bilgi Üniversitesi'nde Siyasal Bilgiler lisans programını tamamladı.</li>
+              <li>İngiltere'de Sheffield Üniversitesinde Politik Ekonomi alanında yüksek lisans derecesi aldı.</li>
+              <li>2017 yılında ODTÜ Uluslararası İlişkiler doktora programını kazandı.</li>
+              <li>2023 yılında doktora programını tamamlayarak doktor unvanını aldı.</li>
+              <li>ODTÜ'de yazdığı doktora tezi göç ve güvenlik perspektifinde Türkiye'nin Suriye Politikası üzerinedir.</li>
+            </ul>
+          </div>
+
+          <div class="bio-card">
+            <h2>Siyasi Kariyeri</h2>
+            <ul class="timeline">
+              <li>Siyasete lisede Manisa Ülkü Ocaklarında başladı.</li>
+              <li>Üniversite yıllarında İstanbul Ülkü Ocakları'nın çeşitli kademelerinde görevler aldı.</li>
+              <li>İstanbul Ülkü Ocakları İl Başkan yardımcılığı görevini yürüttü.</li>
+              <li>2017 referandumunda "Türk Milliyetçileri Hayır Diyor" platformunda aktif rol aldı.</li>
+              <li>İYİ Parti'nin kuruluşuyla birlikte Gençlik Kolları Kurucu Genel Sekreterliği görevini yürüttü.</li>
+              <li>2018 yılında Manisa Milletvekili Adayı oldu.</li>
+              <li>İYİ Parti Meclis Grup Danışmanı olarak görev yaptı.</li>
+              <li>İYİ Parti 5. Olağanüstü Kurultayı'nın ardından İYİ Parti Milli Güvenlik ve Göç politikalarından sorumlu Genel Başkan yardımcısı oldu.</li>
+            </ul>
+          </div>
+        </div>
       </main>
       <footer></footer>
     </div>
   </div>
+
+  <script src="js/script.js"></script>
 </body>
 </html>
