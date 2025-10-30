@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Panel — Haber Yönetimi</title>
+  <link href="../css/style.css" rel="stylesheet">
+  <style>
+    .panel{max-width:1100px;margin:30px auto;padding:20px}
+    .panel h2{margin-bottom:12px;color:#fff}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:20px}
+    /* use dark card style consistent with site */
+    .card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.6);color:var(--muted)}
+    .form-row{display:flex;gap:8px}
+    .form-row input,.form-row textarea{flex:1;padding:10px;border:1px solid rgba(255,255,255,0.04);border-radius:8px;background:transparent;color:var(--muted)}
+    .form-row input::placeholder,.form-row textarea::placeholder{color:rgba(189,189,189,0.5)}
+    .news-list-admin{display:flex;flex-direction:column;gap:12px}
+    .news-item-admin{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent}
+    .small{font-size:13px;color:rgba(255,255,255,0.6)}
+    .btn{padding:8px 10px;border-radius:8px;border:none;cursor:pointer}
+    .btn-danger{background:#8b0000;color:#fff}
+    .btn-primary{background:var(--accent);color:#fff}
+    .logout{float:right}
+    .image-preview{width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:8px;border:1px solid rgba(255,255,255,0.03)}
+    label.file-label{display:block;margin-top:8px;color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <div style="display:flex;align-items:center;justify-content:space-between"><h2>Haber Yönetimi (Vitrin)</h2><button class="btn logout" id="logout">Çıkış</button></div>
+
+    <div class="grid">
+      <div>
+        <div class="card">
+          <h3>Yeni Haber Ekle</h3>
+          <form id="news-form">
+            <input name="title" placeholder="Başlık" required>
+            <input name="date" placeholder="GG Ay Yıl veya 26 Nisan 2023" required>
+            <input name="image" placeholder="Resim URL (opsiyonel)">
+            <label class="file-label">Veya bilgisayarınızdan resim yükleyin (opsiyonel):
+              <input type="file" id="imageFile" accept="image/*">
+            </label>
+            <img id="image-preview" class="image-preview" src="../assets/images/default.png" alt="preview">
+            <textarea name="excerpt" placeholder="Kısa özet"></textarea>
+            <textarea name="content" placeholder="İçerik"></textarea>
+            <div style="margin-top:10px;display:flex;gap:8px"><button class="btn btn-primary" type="submit">Kaydet</button><button type="button" id="clear-form" class="btn">Temizle</button></div>
+          </form>
+        </div>
+
+        <div style="margin-top:12px" class="card">
+          <h3>Mevcut Haberler</h3>
+          <div id="news-list-admin" class="news-list-admin"></div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="card">
+          <h3>Yardım</h3>
+          <p class="small">Buradaki veriler tarayıcıda (localStorage) saklanır. İleride sunucu (MongoDB) bağlantısı eklenecektir. Mevcut verileri silmek için tarayıcı localStorage'ını temizleyebilirsiniz.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="../js/admin.js"></script>
+</body>
+</html>

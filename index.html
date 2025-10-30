@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Adnan Beker — Ana Sayfa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="site-wrapper">
+    <aside class="sidebar">
+      <div class="search">
+        <input placeholder="Aranacak metni giriniz..." aria-label="Ara">
+        <button aria-label="Ara"><i class="fa fa-search"></i></button>
+      </div>
+
+      <div class="profile-box">
+        <h4>ADNAN BEKER</h4>
+        <div class="profile-photo">
+          <img src="assets/images/adnan-beker.jpg" alt="Adnan Beker">
+        </div>
+        <p class="profile-desc">1964'te Yozgat'ta doğdu. Baba adı Hacı Çelebi, anne adı Döndü'dür. İlk-orta ve lise öğrenimini Ankara'da tamamlayan Beker, Ankara Aydınlıkevler Lisesi mezunudur. Detaylı özgeçmiş için <a href="about.html">tıklayınız!</a></p>
+      </div>
+
+      <nav class="side-menu">
+        <ul>
+          <li><a href="index.html">ANA SAYFA</a></li>
+          <li><a href="about.html">ÖZGEÇMİŞ</a></li>
+          <li><a href="news.html">HABERLER</a></li>
+          <li style="margin-top:12px"><a href="admin/login.html" class="admin-link">PANEL</a></li>
+          <li class="contact-box" style="margin-top:14px">
+            <div class="contact-card" style="padding:12px;border-radius:8px;background:var(--card)">
+              <h4 style="margin:0 0 8px;color:#fff">Bize Ulaşın</h4>
+              <form id="sidebar-contact-form">
+                <input name="name" placeholder="Ad Soyad" required style="width:100%;padding:8px;margin-bottom:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted)">
+                <input name="phone" placeholder="Telefon Numarası" style="width:100%;padding:8px;margin-bottom:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted)">
+                <textarea name="message" placeholder="Mesaj" rows="3" style="width:100%;padding:8px;margin-bottom:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted)"></textarea>
+                <button type="submit" class="btn btn-primary" style="width:100%">Gönder</button>
+                <div id="sidebar-contact-result" class="muted-small" style="display:none;margin-top:8px;color:lightgreen">Mesajınız kaydedildi. Teşekkürler.</div>
+              </form>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      <header class="top-nav">
+        <div class="container">
+          <button class="menu-toggle" aria-label="Menüyü aç" aria-expanded="false">☰</button>
+          <ul class="top-links">
+            <li><a href="index.html">ANA SAYFA</a></li>
+            <li><a href="about.html">ÖZGEÇMİŞ</a></li>
+            <li><a href="news.html">HABERLER</a></li>
+            <li><a href="#">CHP</a></li>
+          </ul>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="hero-inner container">
+            <div class="hero-banner">
+              <img src="assets/images/slider1.jpg" alt="Banner">
+            </div>
+            <div class="hero-title">28. Dönem CHP Ankara Milletvekili</div>
+            <p class="lead">Güncel haberler, meclis çalışmaları ve iletişim için bu sayfayı takip edebilirsiniz.</p>
+            <div class="social-row">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-x-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+              <a href="#"><i class="far fa-envelope"></i></a>
+              <a href="#"><i class="fab fa-tiktok"></i></a>
+            </div>
+          </div>
+        </section>
+
+        <section class="news-grid container">
+          <!-- News preview: filled from localStorage by js/news.js -->
+          <div id="news-preview"></div>
+        </section>
+      </main>
+
+      <footer>
+        <div class="container footer-inner">
+          <div class="footer-left">
+            <p>&copy; 2025 Adnan Beker</p>
+          </div>
+          <div class="footer-right social">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+  <script src="js/news.js"></script>
+</body>
+</html>

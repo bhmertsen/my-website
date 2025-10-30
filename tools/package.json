@@ -1,0 +1,11 @@
+{
+  "name": "site1-tools",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "resize": "node resize-image.js"
+  },
+  "dependencies": {
+    "sharp": "^0.32.0"
+  }
+}

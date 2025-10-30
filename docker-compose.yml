@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    build: ./server
+    image: site1-app:latest
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./server/.env
+    depends_on:
+      - mongo
+    volumes:
+      # mount server code for easy local edits (optional, remove in production)
+      - ./server:/usr/src/app
+    environment:
+      # if you want to use Atlas, set MONGODB_URI in server/.env to your Atlas URI
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongo:27017/site1}
+
+  mongo:
+    image: mongo:6.0
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

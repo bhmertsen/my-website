@@ -1,0 +1,46 @@
+name: Build & Deploy to VPS (optional)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./server
+          push: false
+          tags: site1-app:ci
+
+      - name: Copy compose & pull on server via SSH
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT || '22' }}
+          script: |
+            # stop existing
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/site1:latest || true
+            # optionally run docker-compose (assumes docker-compose.yml present on server)
+            cd ~/site1 || mkdir -p ~/site1
+            # copy files using scp is not available here; you should clone repo on server or set up pull workflow
+            docker-compose -f ~/site1/docker-compose.yml pull || true
+            docker-compose -f ~/site1/docker-compose.yml up -d --remove-orphans
+
+            # Run the seed-admin script inside a temporary container so admin user is ensured in the DB
+            echo "Running admin seed script in a one-off container"
+            docker run --rm \
+              -e MONGODB_URI='${{ secrets.MONGODB_URI }}' \
+              -e ADMIN_USER='${{ secrets.ADMIN_USER }}' \
+              -e ADMIN_PASS='${{ secrets.ADMIN_PASS }}' \
+              -e JWT_SECRET='${{ secrets.JWT_SECRET }}' \
+              ${{ secrets.DOCKERHUB_USERNAME }}/site1:latest \
+              node scripts/seedAdmin.js || echo "Seed script failed or already ran"

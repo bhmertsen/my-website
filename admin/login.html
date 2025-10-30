@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Girişi</title>
+  <link href="../css/style.css" rel="stylesheet">
+  <style>
+    .admin-wrap{max-width:420px;margin:60px auto;padding:24px;background:#fff;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,0.06)}
+    .admin-wrap h2{margin-bottom:18px}
+    .admin-wrap input{width:100%;padding:10px;margin-bottom:12px;border:1px solid #e6e6e6;border-radius:6px}
+    .admin-wrap button{background:#C70039;color:#fff;border:none;padding:10px 14px;border-radius:6px;cursor:pointer}
+    .login-error{color:#c00;margin-top:8px;display:none}
+  </style>
+</head>
+<body>
+  <div class="container admin-wrap">
+    <h2>Yönetici Girişi</h2>
+    <form id="admin-login">
+      <label>Kullanıcı Adı</label>
+      <input name="username" value="" required>
+      <label>Şifre</label>
+      <input name="password" type="password" required>
+      <button type="submit">Giriş</button>
+    </form>
+    <div class="login-error" id="login-error">Giriş başarısız. Kullanıcı adı/şifre yanlış veya sunucuya bağlanılamıyor.</div>
+    <div style="margin-top:10px;font-size:13px;color:#666">Not: Sunucu yoksa varsayılan kullanıcı: <strong>admin</strong>, şifre: <strong>pass</strong> (yerel, güvensiz fallback).</div>
+  </div>
+
+  <script>
+    async function apiLogin(username, password){
+      try{
+        var res = await fetch('/api/login', {
+          method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ username, password })
+        });
+        if(!res.ok) throw new Error('login failed');
+        var data = await res.json();
+        return data.token;
+      }catch(e){
+        return null;
+      }
+    }
+
+    document.getElementById('admin-login').addEventListener('submit', async function(e){
+      e.preventDefault();
+      var u = e.target.username.value.trim();
+      var p = e.target.password.value;
+
+      // try API login first
+      var token = await apiLogin(u,p);
+      if(token){
+        sessionStorage.setItem('adminToken', token);
+        window.location.href = 'panel.html';
+        return;
+      }
+
+      // fallback to local insecure auth for MVP when API is not reachable
+      if(u === 'admin' && p === 'pass'){
+        sessionStorage.setItem('adminToken', 'local-fallback');
+        window.location.href = 'panel.html';
+        return;
+      }
+
+      document.getElementById('login-error').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
