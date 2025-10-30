@@ -24,10 +24,7 @@
     if(!list){
       list = getLocalNews();
       if(list.length === 0){
-        list = [
-          {id:1,title:'Kırşehirli Hemşehrilerimizle Bir Araya Geldik',date:'26 Nisan 2023',image:'assets/images/news1.jpg',excerpt:'Kısa özet...',content:'Detaylı içerik...',published:true},
-          {id:2,title:'Etlik Şehir Hastanesi Taksi Durağında Taksici Esnafımız İle Bir Araya Geldik',date:'25 Nisan 2023',image:'assets/images/news2.jpg',excerpt:'Kısa özet...',content:'Detaylı içerik...',published:true}
-        ];
+        list = [];
         saveLocalNews(list);
       }
     }
