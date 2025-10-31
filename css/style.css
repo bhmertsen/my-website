@@ -307,6 +307,7 @@ footer{border-top:1px solid rgba(255,255,255,0.03);padding:20px 0;background:tra
 @media(max-width:600px){
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     /* Compact links next to hamburger on mobile */
     .top-nav .container{justify-content:space-between;padding:10px 20px}
     .top-links{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
@@ -321,6 +322,8 @@ footer{border-top:1px solid rgba(255,255,255,0.03);padding:20px 0;background:tra
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 	/* Show compact links next to hamburger on mobile */
 	.top-links{display:flex;gap:8px;margin-left:auto}
 	.top-links a{background:rgba(255,255,255,0.06);padding:6px 8px;border-radius:8px;font-size:12px}
@@ -329,6 +332,9 @@ footer{border-top:1px solid rgba(255,255,255,0.03);padding:20px 0;background:tra
 	.news-row{flex-direction:column}
 	.main-area{padding:0;margin-left:0}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
