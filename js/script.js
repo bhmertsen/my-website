@@ -178,6 +178,42 @@ document.addEventListener('DOMContentLoaded', function(){
       };
 
       function pad(n){ return (n<10? '0':'') + n; }
+      function isYouTube(u){ return /youtu\.be\//.test(u) || /youtube\.com\/(watch\?v=|live\/)/.test(u); }
+      function extractYouTubeId(u){
+        try{
+          var id = null;
+          var m1 = u.match(/[?&]v=([\w-]{11})/); if(m1) return m1[1];
+          var m2 = u.match(/youtu\.be\/([\w-]{11})/); if(m2) return m2[1];
+          var m3 = u.match(/youtube\.com\/live\/([\w-]{11})/); if(m3) return m3[1];
+          return id;
+        }catch(e){ return null; }
+      }
+      function ensureEmbed(url){
+        // create container once per page
+        var hostSection = document.querySelector('.live-section .container');
+        if(!hostSection) return;
+        var embedWrap = document.getElementById('live-embed');
+        if(!embedWrap){
+          embedWrap = document.createElement('div');
+          embedWrap.id = 'live-embed';
+          embedWrap.className = 'live-embed';
+          hostSection.appendChild(embedWrap);
+        }
+        embedWrap.innerHTML = '';
+        if(isYouTube(url)){
+          var id = extractYouTubeId(url);
+          if(id){
+            var iframe = document.createElement('iframe');
+            iframe.width = '100%';
+            iframe.height = '100%';
+            iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+            iframe.allowFullscreen = true;
+            iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&mute=1&playsinline=1&rel=0';
+            embedWrap.appendChild(iframe);
+          }
+        }
+      }
+
       function tick(){
         var now = new Date();
         var diff = target - now;
@@ -187,7 +223,11 @@ document.addEventListener('DOMContentLoaded', function(){
           if(units.minutes) units.minutes.textContent = '00';
           if(units.seconds) units.seconds.textContent = '00';
           var badge = box.querySelector('.badge');
-          if(badge){ badge.innerHTML = '<i class="fa fa-wifi"></i> Yayında'; }
+          if(badge){ badge.innerHTML = '<i class="fa fa-wifi"></i> Şu Anda Canlı'; }
+          // switch CTA to İzle and show
+          if(linkEl){ linkEl.textContent = 'İzle'; linkEl.style.display = 'inline-flex'; linkEl.href = url || '#'; }
+          // create/embed player if URL is supported
+          if(url){ ensureEmbed(url); }
           return; // stop updating
         }
         var s = Math.floor(diff/1000);
@@ -199,6 +239,8 @@ document.addEventListener('DOMContentLoaded', function(){
         if(units.hours) units.hours.textContent = pad(hrs);
         if(units.minutes) units.minutes.textContent = pad(mins);
         if(units.seconds) units.seconds.textContent = pad(secs);
+        // hide CTA while counting down
+        if(linkEl){ linkEl.style.display = 'none'; }
         requestAnimationFrame(function(){ setTimeout(tick, 1000); });
       }
       tick();
