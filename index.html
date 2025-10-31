@@ -29,14 +29,20 @@
           <li><a href="index.html">ANA SAYFA</a></li>
           <li><a href="about.html">ÖZGEÇMİŞ</a></li>
           <li><a href="news.html">HABERLER</a></li>
+<<<<<<< Updated upstream
           <li class="contact-box" style="margin-top:14px">
             <div class="contact-card" style="padding:12px;border-radius:8px;background:var(--card)">
               <h4 style="margin:0 0 8px;color:#fff">Bize Ulaşın</h4>
+=======
+          <li class="contact-box">
+            <div class="contact-card">
+              <h4>Bize Ulaşın</h4>
+>>>>>>> Stashed changes
               <form id="sidebar-contact-form">
-                <input name="name" placeholder="Ad Soyad" required style="width:100%;padding:8px;margin-bottom:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted)">
-                <input name="phone" placeholder="Telefon Numarası" style="width:100%;padding:8px;margin-bottom:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted)">
-                <textarea name="message" placeholder="Mesaj" rows="3" style="width:100%;padding:8px;margin-bottom:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted)"></textarea>
-                <button type="submit" class="btn btn-primary" style="width:100%">Gönder</button>
+                <input name="name" placeholder="Ad Soyad" required>
+                <input name="phone" placeholder="Telefon Numarası">
+                <textarea name="message" placeholder="Mesaj" rows="3"></textarea>
+                <button type="submit" class="btn btn-primary">Gönder</button>
                 <div id="sidebar-contact-result" class="muted-small" style="display:none;margin-top:8px;color:lightgreen">Mesajınız kaydedildi. Teşekkürler.</div>
               </form>
             </div>
@@ -79,6 +85,27 @@
               <a href="#"><i class="fab fa-youtube"></i></a>
               <a href="#"><i class="far fa-envelope"></i></a>
               <a href="#"><i class="fab fa-tiktok"></i></a>
+            </div>
+          </div>
+        </section>
+
+        <section class="live-section">
+          <div class="container">
+            <div id="live-broadcast" class="live-card" data-channel="Halk TV" data-datetime="2025-12-01T21:00:00+03:00" data-url="news.html">
+              <div class="live-head">
+                <div class="badge live-live"><i class="fa fa-bullhorn"></i> Canlı Yayın</div>
+                <div class="channel">Halk TV</div>
+              </div>
+              <div class="live-timer">
+                <div class="unit"><div class="num" data-unit="days">--</div><div class="label">GÜN</div></div>
+                <div class="unit"><div class="num" data-unit="hours">--</div><div class="label">SAAT</div></div>
+                <div class="unit"><div class="num" data-unit="minutes">--</div><div class="label">DAKİKA</div></div>
+                <div class="unit"><div class="num" data-unit="seconds">--</div><div class="label">SANİYE</div></div>
+              </div>
+              <div class="live-foot">
+                <div class="date" id="live-date">—</div>
+                <a class="cta" id="live-link" href="news.html">Detay</a>
+              </div>
             </div>
           </div>
         </section>

@@ -1,40 +1,4 @@
 document.addEventListener('DOMContentLoaded', function(){
-  // Toggle menu functionality
-  const menuToggle = document.querySelector('.menu-toggle');
-  const menuIcon = document.querySelector('.menu-icon');
-  const closeIcon = document.querySelector('.close-icon');
-  const sidebar = document.querySelector('.sidebar');
-  
-  if(menuToggle && sidebar) {
-    menuToggle.addEventListener('click', function() {
-      const isOpen = document.body.classList.contains('sidebar-open');
-      
-      if(isOpen) {
-        // Close menu
-        document.body.classList.remove('sidebar-open');
-        menuIcon.style.display = 'block';
-        closeIcon.style.display = 'none';
-        menuToggle.setAttribute('aria-expanded', 'false');
-      } else {
-        // Open menu
-        document.body.classList.add('sidebar-open');
-        menuIcon.style.display = 'none';
-        closeIcon.style.display = 'block';
-        menuToggle.setAttribute('aria-expanded', 'true');
-      }
-    });
-  }
-
-  // Close menu when clicking outside
-  document.addEventListener('click', function(event) {
-    const isOpen = document.body.classList.contains('sidebar-open');
-    if(isOpen && !sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
-      document.body.classList.remove('sidebar-open');
-      menuIcon.style.display = 'block';
-      closeIcon.style.display = 'none';
-      menuToggle.setAttribute('aria-expanded', 'false');
-    }
-  });
 
   // Small interaction: toggle submenus in sidebar
   document.querySelectorAll('.side-menu .has-sub').forEach(function(el){
@@ -175,4 +139,60 @@ document.addEventListener('DOMContentLoaded', function(){
       }catch(e){ /* ignore */ }
     });
   }
+
+  // Live Broadcast countdown
+  (function(){
+    var box = document.getElementById('live-broadcast');
+    if(!box) return;
+    try{
+      var dtStr = box.getAttribute('data-datetime');
+      var channel = box.getAttribute('data-channel') || '';
+      var url = box.getAttribute('data-url') || '#';
+      var dateEl = document.getElementById('live-date');
+      var linkEl = document.getElementById('live-link');
+      var chEl = box.querySelector('.channel');
+      if(chEl) chEl.textContent = channel;
+      if(linkEl) linkEl.href = url;
+      var target = new Date(dtStr);
+      if(dateEl){
+        try{
+          var fmt = target.toLocaleString('tr-TR', { dateStyle:'full', timeStyle:'short' });
+          dateEl.textContent = fmt + ' • ' + channel;
+        }catch(e){ dateEl.textContent = dtStr + ' • ' + channel; }
+      }
+
+      var units = {
+        days: box.querySelector('[data-unit="days"]'),
+        hours: box.querySelector('[data-unit="hours"]'),
+        minutes: box.querySelector('[data-unit="minutes"]'),
+        seconds: box.querySelector('[data-unit="seconds"]')
+      };
+
+      function pad(n){ return (n<10? '0':'') + n; }
+      function tick(){
+        var now = new Date();
+        var diff = target - now;
+        if(diff <= 0){
+          if(units.days) units.days.textContent = '00';
+          if(units.hours) units.hours.textContent = '00';
+          if(units.minutes) units.minutes.textContent = '00';
+          if(units.seconds) units.seconds.textContent = '00';
+          var badge = box.querySelector('.badge');
+          if(badge){ badge.innerHTML = '<i class="fa fa-wifi"></i> Yayında'; }
+          return; // stop updating
+        }
+        var s = Math.floor(diff/1000);
+        var days = Math.floor(s/86400); s -= days*86400;
+        var hrs = Math.floor(s/3600); s -= hrs*3600;
+        var mins = Math.floor(s/60); s -= mins*60;
+        var secs = s;
+        if(units.days) units.days.textContent = pad(days);
+        if(units.hours) units.hours.textContent = pad(hrs);
+        if(units.minutes) units.minutes.textContent = pad(mins);
+        if(units.seconds) units.seconds.textContent = pad(secs);
+        requestAnimationFrame(function(){ setTimeout(tick, 1000); });
+      }
+      tick();
+    }catch(e){ /* ignore */ }
+  })();
 });
