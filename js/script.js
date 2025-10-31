@@ -148,6 +148,15 @@ document.addEventListener('DOMContentLoaded', function(){
       var dtStr = box.getAttribute('data-datetime');
       var channel = box.getAttribute('data-channel') || '';
       var url = box.getAttribute('data-url') || '#';
+      // Override from admin-saved settings if available
+      try{
+        var saved = JSON.parse(localStorage.getItem('live_settings')||'{}');
+        if(saved && (saved.datetime || saved.channel || saved.url)){
+          if(saved.datetime) dtStr = saved.datetime;
+          if(saved.channel) channel = saved.channel;
+          if(saved.url) url = saved.url;
+        }
+      }catch(e){ /* ignore parse errors */ }
       var dateEl = document.getElementById('live-date');
       var linkEl = document.getElementById('live-link');
       var chEl = box.querySelector('.channel');
