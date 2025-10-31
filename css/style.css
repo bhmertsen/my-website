@@ -156,14 +156,14 @@ body.sidebar-open{overflow:hidden}
 /* News grid similar to screenshot */
 .news-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;padding:40px 0}
 .home-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
-.news-large{position:relative}
-.news-large img{width:100%;height:360px;object-fit:cover;border-radius:10px}
+.news-large{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:16/9}
+.news-large img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .news-caption{position:absolute;left:0;right:0;bottom:18px;padding:18px;text-align:center;color:#fff}
 .news-caption h3{margin:0;font-size:22px;text-shadow:0 6px 18px rgba(0,0,0,0.6)}
 .news-caption .date{margin-top:8px;color:rgba(255,255,255,0.85);font-size:13px}
 
 .news-row{grid-column:1/3;display:flex;gap:18px;margin-top:0}
-.news-small img{width:100%;height:160px;object-fit:cover;border-radius:8px}
+.news-small img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:8px}
 .news-small{flex:1;background:var(--card);padding:8px;border-radius:8px}
 
 .news-card{background:var(--card);padding:14px;border-radius:8px;color:var(--muted);box-shadow:0 6px 20px rgba(0,0,0,0.6)}
@@ -185,7 +185,7 @@ body.sidebar-open{overflow:hidden}
 /* News page list layout */
 .news-list{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .news-card-item{display:flex;gap:14px;background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px;box-shadow:0 10px 26px rgba(0,0,0,0.35)}
-.news-card-item img{width:140px;height:100px;object-fit:cover;border-radius:8px}
+.news-card-item img{width:160px;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:8px}
 .news-card-item .nc-body h3{margin:0 0 6px;color:#fff;font-size:18px}
 .news-card-item .nc-body p{margin:8px 0 0;font-size:13px;color:rgba(255,255,255,0.8)}
 
@@ -293,16 +293,16 @@ footer{border-top:1px solid rgba(255,255,255,0.03);padding:20px 0;background:tra
 
 /* Responsive */
 @media(max-width:1000px){
-	/* Sidebar hidden visually; will slide in when toggled */
-	.sidebar{display:block;position:fixed;left:0;top:0;bottom:0;width:280px;transform:translateX(-110%);box-shadow:0 30px 60px rgba(0,0,0,0.6);overflow:auto}
-	.sidebar-overlay{display:none}
-	.main-area{margin-left:0}
-	.site-wrapper{flex-direction:column}
-	.top-nav .container{padding:0 20px}
-	.menu-toggle{display:inline-block}
-	.news-grid{grid-template-columns:1fr}
-	.news-large img{height:260px}
-	.news-row{flex-direction:row}
+  /* Sidebar hidden visually; will slide in when toggled */
+  .sidebar{display:block;position:fixed;left:0;top:0;bottom:0;width:280px;transform:translateX(-110%);box-shadow:0 30px 60px rgba(0,0,0,0.6);overflow:auto}
+  .sidebar-overlay{display:none}
+  .main-area{margin-left:0}
+  .site-wrapper{flex-direction:column}
+  .top-nav .container{padding:0 20px}
+  .menu-toggle{display:inline-block}
+  .news-grid{grid-template-columns:1fr}
+  .news-row{flex-direction:row}
+  .news-card-item img{aspect-ratio:16/9;object-fit:cover}
 }
 
 @media(max-width:600px){
@@ -312,34 +312,12 @@ footer{border-top:1px solid rgba(255,255,255,0.03);padding:20px 0;background:tra
     .top-links a{background:rgba(255,255,255,0.06);padding:6px 8px;border-radius:8px;font-size:12px}
     .hero .hero-banner{display:flex;justify-content:center;align-items:center;padding:0 20px}
     .hero .hero-banner img{max-width:320px;width:100%;margin:0 auto}
-    .news-large img{height:180px}
+    .news-large{aspect-ratio:16/9}
     .news-row{flex-direction:column}
     .main-area{padding:0;margin-left:0}
     .news-hero h1{font-size:24px}
     .news-sub{font-size:13px}
-<<<<<<< HEAD
     .home-grid{grid-template-columns:1fr}
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-	/* Show compact links next to hamburger on mobile */
-	.top-links{display:flex;gap:8px;margin-left:auto}
-	.top-links a{background:rgba(255,255,255,0.06);padding:6px 8px;border-radius:8px;font-size:12px}
-	.hero .hero-banner img{max-width:320px}
-	.news-large img{height:180px}
-	.news-row{flex-direction:column}
-	.main-area{padding:0;margin-left:0}
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> 89afb51214b6f9896082d5bc3540715f935f43cc
 }
 
 /* Hide admin panel link in menus; access via /admin */
