@@ -58,6 +58,22 @@
           <h3>Yardım</h3>
           <p class="small">Buradaki veriler tarayıcıda (localStorage) saklanır. İleride sunucu (MongoDB) bağlantısı eklenecektir. Mevcut verileri silmek için tarayıcı localStorage'ını temizleyebilirsiniz.</p>
         </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Canlı Yayın Ayarları</h3>
+          <form id="live-form">
+            <div class="form-row" style="flex-direction:column">
+              <input id="liveChannel" placeholder="Kanal adı (ör. Halk TV)">
+              <input id="liveDateTime" type="datetime-local" placeholder="Tarih & Saat">
+              <input id="liveUrl" placeholder="Detay URL (opsiyonel)">
+            </div>
+            <div style="margin-top:10px;display:flex;gap:8px">
+              <button type="submit" class="btn btn-primary">Kaydet</button>
+              <button type="button" id="live-clear" class="btn">Temizle</button>
+            </div>
+            <div class="small" style="margin-top:8px">Bu bilgiler ana sayfadaki sayaçta gösterilir.</div>
+          </form>
+        </div>
       </aside>
     </div>
   </div>

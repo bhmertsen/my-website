@@ -78,7 +78,7 @@
       form.date.value = it.date || '';
       form.image.value = it.image && it.image.indexOf('data:') === -1 ? it.image : '';
       var preview = document.getElementById('image-preview');
-  if(it.image){ preview.src = it.image; } else { preview.src = '../assets/images/default.png'; }
+      if(it.image){ preview.src = it.image; } else { preview.src = '../assets/images/default.png'; }
       form.excerpt.value = it.excerpt || '';
       form.content.value = it.content || '';
       form.dataset.editId = it._id || it.id || '';
@@ -115,7 +115,7 @@
       }
 
       // ensure we have a fallback image
-  if(!payload.image) payload.image = form.image.value.trim() || 'assets/images/default.png';
+      if(!payload.image) payload.image = form.image.value.trim() || 'assets/images/default.png';
 
       var editId = form.dataset.editId;
       if(editId){
@@ -152,5 +152,33 @@
     document.getElementById('logout').addEventListener('click', function(){ sessionStorage.removeItem('adminToken'); location.href='login.html'; });
 
     loadList();
+
+    // Live broadcast settings management
+    (function(){
+      var formLive = document.getElementById('live-form');
+      if(!formLive) return;
+      function getLive(){ try{ return JSON.parse(localStorage.getItem('live_settings')||'{}'); }catch(e){ return {}; } }
+      function setLive(v){ try{ localStorage.setItem('live_settings', JSON.stringify(v||{})); }catch(e){} }
+      function populate(){
+        var s = getLive();
+        var ch = document.getElementById('liveChannel');
+        var dt = document.getElementById('liveDateTime');
+        var url = document.getElementById('liveUrl');
+        if(ch) ch.value = s.channel || '';
+        if(dt) dt.value = s.datetime || '';
+        if(url) url.value = s.url || '';
+      }
+      populate();
+      formLive.addEventListener('submit', function(e){
+        e.preventDefault();
+        var ch = document.getElementById('liveChannel').value.trim();
+        var dt = document.getElementById('liveDateTime').value.trim();
+        var url = (document.getElementById('liveUrl').value||'').trim();
+        setLive({ channel: ch, datetime: dt, url: url });
+        alert('Canlı yayın bilgileri kaydedildi');
+      });
+      var clearBtn = document.getElementById('live-clear');
+      if(clearBtn){ clearBtn.addEventListener('click', function(){ localStorage.removeItem('live_settings'); populate(); alert('Canlı yayın bilgileri temizlendi'); }); }
+    })();
   }
 })();
