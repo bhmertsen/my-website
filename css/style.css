@@ -305,6 +305,7 @@ footer{border-top:1px solid rgba(255,255,255,0.03);padding:20px 0;background:tra
 }
 
 @media(max-width:600px){
+<<<<<<< Updated upstream
     /* Compact links next to hamburger on mobile */
     .top-nav .container{justify-content:space-between;padding:10px 20px}
     .top-links{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
@@ -316,6 +317,15 @@ footer{border-top:1px solid rgba(255,255,255,0.03);padding:20px 0;background:tra
     .main-area{padding:0;margin-left:0}
     .news-hero h1{font-size:24px}
     .news-sub{font-size:13px}
+=======
+	/* Show compact links next to hamburger on mobile */
+	.top-links{display:flex;gap:8px;margin-left:auto}
+	.top-links a{background:rgba(255,255,255,0.06);padding:6px 8px;border-radius:8px;font-size:12px}
+	.hero .hero-banner img{max-width:320px}
+	.news-large img{height:180px}
+	.news-row{flex-direction:column}
+	.main-area{padding:0;margin-left:0}
+>>>>>>> Stashed changes
 }
 
 /* Hide admin panel link in menus; access via /admin */
