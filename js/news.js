@@ -54,11 +54,15 @@
     if(list.length === 0){ listEl.innerHTML = '<p>Henüz haber yok.</p>'; return; }
     var html = '';
     list.forEach(function(it){
-      html += '<div class="card" style="margin-bottom:12px">';
-      html += '<h3><a href="#n'+(it._id||it.id)+'">'+escapeHtml(it.title)+'</a></h3>';
-      html += '<div class="small">'+escapeHtml(it.date)+'</div>';
-      html += '<p>'+escapeHtml(it.excerpt||'')+'</p>';
-      html += '</div>';
+      var img = it.image || 'assets/images/default.png';
+      html += '<article class="news-card-item">';
+      html +=   '<a href="#n'+(it._id||it.id)+'"><img src="'+img+'" alt="'+escapeHtml(it.title)+'"></a>';
+      html +=   '<div class="nc-body">';
+      html +=     '<h3><a href="#n'+(it._id||it.id)+'" style="color:#fff;text-decoration:none">'+escapeHtml(it.title)+'</a></h3>';
+      html +=     '<div class="small">'+escapeHtml(it.date||'')+'</div>';
+      if(it.excerpt){ html +=   '<p>'+escapeHtml(it.excerpt)+'</p>'; }
+      html +=   '</div>';
+      html += '</article>';
     });
     listEl.innerHTML = html;
   }
