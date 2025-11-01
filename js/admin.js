@@ -157,16 +157,28 @@
     (function(){
       var formLive = document.getElementById('live-form');
       if(!formLive) return;
-      function getLive(){ try{ return JSON.parse(localStorage.getItem('live_settings')||'{}'); }catch(e){ return {}; } }
-      function setLive(v){ try{ localStorage.setItem('live_settings', JSON.stringify(v||{})); }catch(e){} }
-      function populate(){
-        var s = getLive();
-        var ch = document.getElementById('liveChannel');
-        var dt = document.getElementById('liveDateTime');
-        var url = document.getElementById('liveUrl');
-        if(ch) ch.value = s.channel || '';
-        if(dt) dt.value = s.datetime || '';
-        if(url) url.value = s.url || '';
+      function getLiveLocal(){ try{ return JSON.parse(localStorage.getItem('live_settings')||'{}'); }catch(e){ return {}; } }
+      function setLiveLocal(v){ try{ localStorage.setItem('live_settings', JSON.stringify(v||{})); }catch(e){} }
+      async function populate(){
+        var chEl = document.getElementById('liveChannel');
+        var dtEl = document.getElementById('liveDateTime');
+        var urlEl = document.getElementById('liveUrl');
+        // Try API first
+        try{
+          var data = await apiFetch('/api/live');
+          if(data){
+            if(chEl) chEl.value = data.channel || '';
+            if(dtEl) dtEl.value = data.datetime || '';
+            if(urlEl) urlEl.value = data.url || '';
+            // also cache locally for offline
+            setLiveLocal({ channel: data.channel||'', datetime: data.datetime||'', url: data.url||'' });
+            return;
+          }
+        }catch(e){ /* fallback to local */ }
+        var s = getLiveLocal();
+        if(chEl) chEl.value = s.channel || '';
+        if(dtEl) dtEl.value = s.datetime || '';
+        if(urlEl) urlEl.value = s.url || '';
       }
       populate();
       formLive.addEventListener('submit', function(e){
@@ -174,11 +186,35 @@
         var ch = document.getElementById('liveChannel').value.trim();
         var dt = document.getElementById('liveDateTime').value.trim();
         var url = (document.getElementById('liveUrl').value||'').trim();
-        setLive({ channel: ch, datetime: dt, url: url });
-        alert('Canlı yayın bilgileri kaydedildi');
+        (async function(){
+          // Try API PUT with auth token (if not local-fallback)
+          var token = getToken();
+          if(token && token !== 'local-fallback'){
+            try{
+              await apiFetch('/api/live', { method: 'PUT', body: JSON.stringify({ channel: ch, datetime: dt, url: url }) });
+              // cache
+              setLiveLocal({ channel: ch, datetime: dt, url: url });
+              alert('Canlı yayın bilgileri kaydedildi');
+              return;
+            }catch(err){ /* fall through to local */ }
+          }
+          // Local fallback
+          setLiveLocal({ channel: ch, datetime: dt, url: url });
+          alert('Canlı yayın bilgileri kaydedildi (local)');
+        })();
       });
       var clearBtn = document.getElementById('live-clear');
-      if(clearBtn){ clearBtn.addEventListener('click', function(){ localStorage.removeItem('live_settings'); populate(); alert('Canlı yayın bilgileri temizlendi'); }); }
+      if(clearBtn){ clearBtn.addEventListener('click', function(){
+        (async function(){
+          var token = getToken();
+          if(token && token !== 'local-fallback'){
+            try{ await apiFetch('/api/live', { method: 'PUT', body: JSON.stringify({ channel:'', datetime:'', url:'' }) }); }catch(e){}
+          }
+          localStorage.removeItem('live_settings');
+          populate();
+          alert('Canlı yayın bilgileri temizlendi');
+        })();
+      }); }
     })();
   }
 })();

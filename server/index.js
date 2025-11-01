@@ -13,9 +13,11 @@ app.use(express.json({ limit: '5mb' }));
 // Routes
 const authRoutes = require('./routes/auth');
 const newsRoutes = require('./routes/news');
+const liveRoutes = require('./routes/live');
 
 app.use('/api', authRoutes);
 app.use('/api/news', newsRoutes);
+app.use('/api/live', liveRoutes);
 
 // simple health
 app.get('/api/health', (req,res)=> res.json({ ok:true }));

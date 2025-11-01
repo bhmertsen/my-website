@@ -141,14 +141,27 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   // Live Broadcast countdown
-  (function(){
+  (async function(){
     var box = document.getElementById('live-broadcast');
     if(!box) return;
     try{
       var dtStr = box.getAttribute('data-datetime');
       var channel = box.getAttribute('data-channel') || '';
       var url = box.getAttribute('data-url') || '#';
-      // Override from admin-saved settings if available
+      // Try to get shared live settings from API first, then fallback to localStorage
+      try{
+        var res = await fetch('/api/live');
+        if(res && res.ok){
+          var live = await res.json();
+          if(live){
+            if(live.datetime) dtStr = live.datetime;
+            if(live.channel) channel = live.channel;
+            if(live.url) url = live.url;
+            try{ localStorage.setItem('live_settings', JSON.stringify({ channel, datetime: dtStr, url })); }catch(_e){}
+          }
+        }
+      }catch(_e){ /* ignore network error, fallback below */ }
+      // Fallback to previously saved local settings if any
       try{
         var saved = JSON.parse(localStorage.getItem('live_settings')||'{}');
         if(saved && (saved.datetime || saved.channel || saved.url)){
