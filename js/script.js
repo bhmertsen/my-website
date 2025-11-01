@@ -118,14 +118,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
       var entry = { name: name, phone: phone, message: message, created: new Date().toISOString() };
 
-      try{
-        var existing = JSON.parse(localStorage.getItem('messages_submissions') || '[]');
-        existing.unshift(entry);
-        localStorage.setItem('messages_submissions', JSON.stringify(existing));
-      }catch(e){
-        // ignore storage errors
-      }
-
       // show success
       if(resultEl){ resultEl.style.display = 'block'; resultEl.style.color = 'lightgreen'; resultEl.textContent = 'Mesajınız kaydedildi. Teşekkürler.'; }
       sidebarForm.reset();
@@ -148,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function(){
       var dtStr = box.getAttribute('data-datetime');
       var channel = box.getAttribute('data-channel') || '';
       var url = box.getAttribute('data-url') || '#';
-      // Try to get shared live settings from API first, then fallback to localStorage
+      // Get shared live settings from API only
       try{
         var base = (typeof window !== 'undefined' && window.API_BASE) ? window.API_BASE : '';
         var res = await fetch(base + '/api/live');
@@ -158,19 +150,9 @@ document.addEventListener('DOMContentLoaded', function(){
             if(live.datetime) dtStr = live.datetime;
             if(live.channel) channel = live.channel;
             if(live.url) url = live.url;
-            try{ localStorage.setItem('live_settings', JSON.stringify({ channel, datetime: dtStr, url })); }catch(_e){}
           }
         }
-      }catch(_e){ /* ignore network error, fallback below */ }
-      // Fallback to previously saved local settings if any
-      try{
-        var saved = JSON.parse(localStorage.getItem('live_settings')||'{}');
-        if(saved && (saved.datetime || saved.channel || saved.url)){
-          if(saved.datetime) dtStr = saved.datetime;
-          if(saved.channel) channel = saved.channel;
-          if(saved.url) url = saved.url;
-        }
-      }catch(e){ /* ignore parse errors */ }
+      }catch(_e){ /* if API fails, keep initial attributes */ }
       var dateEl = document.getElementById('live-date');
       var linkEl = document.getElementById('live-link');
       var chEl = box.querySelector('.channel');

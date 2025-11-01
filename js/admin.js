@@ -33,19 +33,13 @@
       }
     }
 
-    // fallback storage functions
-    function getLocalNews(){ try{ return JSON.parse(localStorage.getItem('news_vitrine')||'[]'); }catch(e){return []} }
-    function saveLocalNews(list){ localStorage.setItem('news_vitrine', JSON.stringify(list)); }
-
     async function loadList(){
       listEl.innerHTML = '<div class="small">Yükleniyor...</div>';
       try{
         var items = await apiFetch('/api/news');
         renderList(items);
       }catch(err){
-        // fallback to localStorage
-        var items = getLocalNews();
-        renderList(items);
+        listEl.innerHTML = '<div class="small" style="color:#f66">Haberler yüklenemedi. Sunucuya bağlanılamıyor.</div>';
       }
     }
 
@@ -86,13 +80,11 @@
     }
 
     async function removeItem(it){
-      // if item has _id and server token, try API delete
-      if(it._id && getToken() && getToken() !== 'local-fallback'){
-        try{ await apiFetch('/api/news/' + it._id, { method: 'DELETE' }); loadList(); alert('Silindi'); return; }catch(e){ /* fallthrough */ }
+      if(it._id && getToken()){
+        try{ await apiFetch('/api/news/' + it._id, { method: 'DELETE' }); loadList(); alert('Silindi'); return; }catch(e){
+          alert('Silme başarısız: sunucu hatası');
+        }
       }
-      // fallback local
-      var items = getLocalNews().filter(function(x){ return (x.id || x._id) !== (it.id || it._id) });
-      saveLocalNews(items); loadList(); alert('Silindi (local)');
     }
 
     form.addEventListener('submit', async function(e){
@@ -121,30 +113,20 @@
       var editId = form.dataset.editId;
       if(editId){
         // update
-        if(getToken() && getToken() !== 'local-fallback'){
-          try{
-            await apiFetch('/api/news/' + editId, { method: 'PUT', body: JSON.stringify(payload) });
-            alert('Güncellendi'); form.reset(); delete form.dataset.editId; loadList(); return;
-          }catch(e){ /* fallback below */ }
+        try{
+          await apiFetch('/api/news/' + editId, { method: 'PUT', body: JSON.stringify(payload) });
+          alert('Güncellendi'); form.reset(); delete form.dataset.editId; loadList(); return;
+        }catch(e){
+          alert('Güncelleme başarısız: sunucu hatası');
         }
-        // fallback local update
-        var items = getLocalNews().map(function(x){ if((x.id||x._id) == editId){ return Object.assign({}, x, payload); } return x; });
-        saveLocalNews(items); alert('Güncellendi (local)'); form.reset(); delete form.dataset.editId; loadList();
       } else {
         // create
-        if(getToken() && getToken() !== 'local-fallback'){
-          try{
-            await apiFetch('/api/news', { method: 'POST', body: JSON.stringify(payload) });
-            alert('Kaydedildi'); form.reset(); loadList(); return;
-          }catch(e){ /* fallback */ }
+        try{
+          await apiFetch('/api/news', { method: 'POST', body: JSON.stringify(payload) });
+          alert('Kaydedildi'); form.reset(); loadList(); return;
+        }catch(e){
+          alert('Kaydetme başarısız: sunucu hatası');
         }
-        // fallback to local
-        var items = getLocalNews();
-        var id = Date.now();
-        // include image if present (base64 or URL)
-        items.unshift(Object.assign({ id: id }, payload));
-        saveLocalNews(items);
-        alert('Kaydedildi (local)'); form.reset(); loadList();
       }
     });
 
@@ -158,28 +140,23 @@
     (function(){
       var formLive = document.getElementById('live-form');
       if(!formLive) return;
-      function getLiveLocal(){ try{ return JSON.parse(localStorage.getItem('live_settings')||'{}'); }catch(e){ return {}; } }
-      function setLiveLocal(v){ try{ localStorage.setItem('live_settings', JSON.stringify(v||{})); }catch(e){} }
       async function populate(){
         var chEl = document.getElementById('liveChannel');
         var dtEl = document.getElementById('liveDateTime');
         var urlEl = document.getElementById('liveUrl');
-        // Try API first
         try{
           var data = await apiFetch('/api/live');
           if(data){
             if(chEl) chEl.value = data.channel || '';
             if(dtEl) dtEl.value = data.datetime || '';
             if(urlEl) urlEl.value = data.url || '';
-            // also cache locally for offline
-            setLiveLocal({ channel: data.channel||'', datetime: data.datetime||'', url: data.url||'' });
             return;
           }
-        }catch(e){ /* fallback to local */ }
-        var s = getLiveLocal();
-        if(chEl) chEl.value = s.channel || '';
-        if(dtEl) dtEl.value = s.datetime || '';
-        if(urlEl) urlEl.value = s.url || '';
+        }catch(e){
+          if(chEl) chEl.value = '';
+          if(dtEl) dtEl.value = '';
+          if(urlEl) urlEl.value = '';
+        }
       }
       populate();
       formLive.addEventListener('submit', function(e){
@@ -188,30 +165,20 @@
         var dt = document.getElementById('liveDateTime').value.trim();
         var url = (document.getElementById('liveUrl').value||'').trim();
         (async function(){
-          // Try API PUT with auth token (if not local-fallback)
-          var token = getToken();
-          if(token && token !== 'local-fallback'){
-            try{
-              await apiFetch('/api/live', { method: 'PUT', body: JSON.stringify({ channel: ch, datetime: dt, url: url }) });
-              // cache
-              setLiveLocal({ channel: ch, datetime: dt, url: url });
-              alert('Canlı yayın bilgileri kaydedildi');
-              return;
-            }catch(err){ /* fall through to local */ }
+          try{
+            await apiFetch('/api/live', { method: 'PUT', body: JSON.stringify({ channel: ch, datetime: dt, url: url }) });
+            alert('Canlı yayın bilgileri kaydedildi');
+            return;
+          }catch(err){
+            alert('Kaydetme başarısız: sunucu hatası');
           }
-          // Local fallback
-          setLiveLocal({ channel: ch, datetime: dt, url: url });
-          alert('Canlı yayın bilgileri kaydedildi (local)');
         })();
       });
       var clearBtn = document.getElementById('live-clear');
       if(clearBtn){ clearBtn.addEventListener('click', function(){
         (async function(){
-          var token = getToken();
-          if(token && token !== 'local-fallback'){
-            try{ await apiFetch('/api/live', { method: 'PUT', body: JSON.stringify({ channel:'', datetime:'', url:'' }) }); }catch(e){}
-          }
-          localStorage.removeItem('live_settings');
+          try{ await apiFetch('/api/live', { method: 'PUT', body: JSON.stringify({ channel:'', datetime:'', url:'' }) }); }
+          catch(e){}
           populate();
           alert('Canlı yayın bilgileri temizlendi');
         })();
