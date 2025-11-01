@@ -150,7 +150,8 @@ document.addEventListener('DOMContentLoaded', function(){
       var url = box.getAttribute('data-url') || '#';
       // Try to get shared live settings from API first, then fallback to localStorage
       try{
-        var res = await fetch('/api/live');
+        var base = (typeof window !== 'undefined' && window.API_BASE) ? window.API_BASE : '';
+        var res = await fetch(base + '/api/live');
         if(res && res.ok){
           var live = await res.json();
           if(live){

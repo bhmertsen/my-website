@@ -7,7 +7,8 @@
 
   async function fetchNews(){
     try{
-      var res = await fetch('/api/news');
+      var base = (typeof window !== 'undefined' && window.API_BASE) ? window.API_BASE : '';
+      var res = await fetch(base + '/api/news');
       if(!res.ok) throw new Error('api error');
       var data = await res.json();
       return data;
@@ -76,7 +77,8 @@
     (async function(){
       var found = null;
       try{
-        var resp = await fetch('/api/news');
+        var base = (typeof window !== 'undefined' && window.API_BASE) ? window.API_BASE : '';
+        var resp = await fetch(base + '/api/news');
         if(resp.ok){
           var list = await resp.json();
           found = list.find(x => (x._id||String(x.id)) === id || String(x.id) === id);

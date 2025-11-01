@@ -24,7 +24,8 @@
       var token = getToken();
       if(token && token !== 'local-fallback') opts.headers['Authorization'] = 'Bearer ' + token;
       try{
-        var res = await fetch(path, opts);
+        var base = (typeof window !== 'undefined' && window.API_BASE) ? window.API_BASE : '';
+        var res = await fetch(base + path, opts);
         if(!res.ok) throw new Error('Network response not ok');
         return await res.json();
       }catch(e){
