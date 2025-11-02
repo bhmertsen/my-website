@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 
+mongoose.set('strictQuery', true);
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -28,7 +30,15 @@ app.get('/api/health', (req,res)=> res.json({ ok:true }));
 const clientDir = path.join(__dirname, '..');
 app.use(express.static(clientDir));
 
-mongoose.connect(process.env.MONGODB_URI || '', { useNewUrlParser:true, useUnifiedTopology:true })
+mongoose.connection.on('connected', () => {
+  console.log('MongoDB connected');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err.message);
+});
+
+mongoose.connect(process.env.MONGODB_URI || '', { useNewUrlParser:true, useUnifiedTopology:true, dbName: process.env.MONGODB_DBNAME })
   .then(()=>{
     app.listen(PORT, ()=> console.log('Server listening on http://localhost:' + PORT));
   })
