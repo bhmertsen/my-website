@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "seed-admin": "node scripts/seedAdmin.js"
+    "seed-admin": "node scripts/seedAdmin.js",
+    "test:db": "node scripts/testMongo.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -14,7 +15,8 @@
     "dotenv": "^16.0.0",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^7.8.7"
+    "mongoose": "^7.8.7",
+    "mongodb": "^6.9.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
