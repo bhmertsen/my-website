@@ -4,6 +4,6 @@ const LiveSchema = new mongoose.Schema({
   channel: { type: String, default: '' },
   datetime: { type: String, default: '' },
   url: { type: String, default: '' }
-}, { timestamps: true });
+}, { timestamps: true, collection: 'lives' });
 
 module.exports = mongoose.model('Live', LiveSchema);

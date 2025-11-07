@@ -7,6 +7,6 @@ const NewsSchema = new mongoose.Schema({
   excerpt: { type: String },
   content: { type: String },
   published: { type: Boolean, default: true }
-}, { timestamps: true });
+}, { timestamps: true, collection: 'news' });
 
 module.exports = mongoose.model('News', NewsSchema);

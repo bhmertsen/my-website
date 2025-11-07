@@ -38,7 +38,7 @@ mongoose.connection.on('error', (err) => {
   console.error('MongoDB connection error:', err.message);
 });
 
-mongoose.connect(process.env.MONGODB_URI || '', { useNewUrlParser:true, useUnifiedTopology:true, dbName: process.env.MONGODB_DBNAME })
+mongoose.connect(process.env.MONGODB_URI || '', { useNewUrlParser:true, useUnifiedTopology:true, dbName: process.env.MONGODB_DBNAME || 'test' })
   .then(()=>{
     app.listen(PORT, ()=> console.log('Server listening on http://localhost:' + PORT));
   })
