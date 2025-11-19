@@ -17,9 +17,25 @@ function authMiddleware(req, res, next){
 }
 
 // GET /api/live - return current live settings (or empty defaults)
+// If the configured live datetime is more than 3 hours in the past,
+// automatically clear it so old broadcasts are not shown on the homepage.
 router.get('/', async (req, res) => {
   try{
-    const doc = await Live.findOne({}).lean();
+    const doc = await Live.findOne({});
+    if(doc && doc.datetime){
+      const liveTime = new Date(doc.datetime);
+      if(!isNaN(liveTime.getTime())){
+        const expiry = new Date(liveTime.getTime() + 3 * 60 * 60 * 1000); // +3 hours
+        const now = new Date();
+        if(now > expiry){
+          doc.channel = '';
+          doc.datetime = '';
+          doc.url = '';
+          await doc.save();
+          return res.json({});
+        }
+      }
+    }
     res.json(doc || {});
   }catch(e){
     res.status(500).json({ error: 'server error' });
