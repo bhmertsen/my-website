@@ -306,19 +306,44 @@ footer{border-top:1px solid rgba(255,255,255,0.03);padding:20px 0;background:tra
 }
 
 @media(max-width:600px){
-    /* Compact links next to hamburger on mobile */
-    .top-nav .container{justify-content:space-between;padding:10px 20px}
-    .top-links{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
-    .top-links a{background:rgba(255,255,255,0.06);padding:6px 8px;border-radius:8px;font-size:12px}
-    .hero .hero-banner{display:flex;justify-content:center;align-items:center;padding:0 20px}
-    .hero .hero-banner img{max-width:320px;width:100%;margin:0 auto}
-    .news-large{aspect-ratio:16/9}
-    .news-row{flex-direction:column}
-    .main-area{padding:0;margin-left:0}
-    .news-hero h1{font-size:24px}
-    .news-sub{font-size:13px}
-    .news-grid #news-preview{grid-template-columns:1fr}
-}
+	    /* Mobile header: nav in two rows, cleaner buttons */
+	    .top-nav .container{
+	        flex-direction:column;
+	        align-items:stretch;
+	        gap:8px;
+	        height:auto;
+	        padding:8px 16px;
+	    }
+	    .nav-left{
+	        width:100%;
+	        justify-content:space-between;
+	    }
+	    .home-button{
+	        flex:1;
+	        justify-content:center;
+	    }
+	    .top-links{
+	        display:flex;
+	        flex-wrap:wrap;
+	        justify-content:center;
+	        gap:6px;
+	        margin-left:0;
+	    }
+	    .top-links a{
+	        background:rgba(255,255,255,0.06);
+	        padding:6px 10px;
+	        border-radius:999px;
+	        font-size:12px;
+	    }
+	    .hero .hero-banner{display:flex;justify-content:center;align-items:center;padding:0 20px}
+	    .hero .hero-banner img{max-width:320px;width:100%;margin:0 auto}
+	    .news-large{aspect-ratio:16/9}
+	    .news-row{flex-direction:column}
+	    .main-area{padding:0;margin-left:0}
+	    .news-hero h1{font-size:24px}
+	    .news-sub{font-size:13px}
+	    .news-grid #news-preview{grid-template-columns:1fr}
+	}
 
 /* Hide admin panel link in menus; access via /admin */
 .admin-link{display:none !important}

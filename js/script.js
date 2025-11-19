@@ -136,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function(){
   (async function(){
     var box = document.getElementById('live-broadcast');
     if(!box) return;
+    var liveSection = document.querySelector('.live-section');
     try{
       var dtStr = box.getAttribute('data-datetime');
       var channel = box.getAttribute('data-channel') || '';
@@ -147,9 +148,21 @@ document.addEventListener('DOMContentLoaded', function(){
         if(res && res.ok){
           var live = await res.json();
           if(live){
-            if(live.datetime) dtStr = live.datetime;
-            if(live.channel) channel = live.channel;
-            if(live.url) url = live.url;
+            var ch = (live.channel || '').trim();
+            var dt = (live.datetime || '').trim();
+            var u = (live.url || '').trim();
+            // If no channel and no datetime are set, hide the section completely
+            if(!ch && !dt){
+              if(liveSection){ liveSection.style.display = 'none'; }
+              return;
+            }
+            if(ch) channel = ch;
+            if(dt) dtStr = dt;
+            if(u) url = u;
+          } else {
+            // No live document found in DB
+            if(liveSection){ liveSection.style.display = 'none'; }
+            return;
           }
         }
       }catch(_e){ /* if API fails, keep initial attributes */ }
