@@ -207,6 +207,15 @@ document.addEventListener('DOMContentLoaded', function(){
             iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&mute=1&playsinline=1&rel=0';
             embedWrap.appendChild(iframe);
           }
+        } else if(url){
+          // generic iframe fallback for non-YouTube sources (may be blocked by X-Frame-Options on the remote site)
+          var iframe = document.createElement('iframe');
+          iframe.width = '100%';
+          iframe.height = '100%';
+          iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+          iframe.allowFullscreen = true;
+          iframe.src = url;
+          embedWrap.appendChild(iframe);
         }
       }
 
