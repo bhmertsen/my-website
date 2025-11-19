@@ -22,6 +22,9 @@ app.use('/api', authRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/live', liveRoutes);
 app.use('/api/messages', messagesRoutes);
+// Public JSON endpoints without /api prefix
+app.use('/news', newsRoutes);
+app.use('/live', liveRoutes);
 
 // simple health
 app.get('/api/health', (req,res)=> res.json({ ok:true }));

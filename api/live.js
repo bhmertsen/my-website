@@ -9,11 +9,26 @@ function setCors(res){
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
 
+function getBody(req){
+  return new Promise((resolve) => {
+    if(req.body && typeof req.body === 'object') return resolve(req.body);
+    let data = '';
+    req.on('data', (chunk)=>{ data += chunk; });
+    req.on('end', ()=>{
+      try{ resolve(data ? JSON.parse(data) : {}); }
+      catch(_e){ resolve({}); }
+    });
+  });
+}
+
 function auth(req){
-  const auth = req.headers['authorization'] || '';
-  if(!auth.startsWith('Bearer ')) return null;
-  try{ return jwt.verify(auth.split(' ')[1], process.env.JWT_SECRET || 'change_this'); }
-  catch(_e){ return null; }
+  const authHeader = req.headers['authorization'] || '';
+  if(!authHeader.startsWith('Bearer ')) return null;
+  try{
+    return jwt.verify(authHeader.split(' ')[1], process.env.JWT_SECRET || 'change_this');
+  }catch(_e){
+    return null;
+  }
 }
 
 module.exports = async function handler(req, res){
@@ -35,8 +50,13 @@ module.exports = async function handler(req, res){
     const user = auth(req);
     if(!user) return res.status(401).json({ error: 'Unauthorized' });
     try{
-      const { channel = '', datetime = '', url = '' } = (req.body && typeof req.body === 'object') ? req.body : JSON.parse(req.body || '{}');
-      const updated = await Live.findOneAndUpdate({}, { channel, datetime, url }, { new: true, upsert: true, setDefaultsOnInsert: true });
+      const body = await getBody(req);
+      const payload = {
+        channel: body.channel || '',
+        datetime: body.datetime || '',
+        url: body.url || ''
+      };
+      const updated = await Live.findOneAndUpdate({}, payload, { new: true, upsert: true, setDefaultsOnInsert: true });
       return res.status(200).json(updated);
     }catch(e){
       return res.status(500).json({ error: 'server error' });
