@@ -14,6 +14,33 @@
     }
   }
 
+  function parseDateToTs(str){
+    if(!str) return 0;
+    var s = String(str).trim();
+    var m = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+    if(m){
+      var d = parseInt(m[1],10);
+      var mo = parseInt(m[2],10) - 1;
+      var y = parseInt(m[3],10);
+      var dt = new Date(y, mo, d);
+      var t = dt.getTime();
+      return isNaN(t) ? 0 : t;
+    }
+    var dt2 = new Date(s);
+    var t2 = dt2.getTime();
+    return isNaN(t2) ? 0 : t2;
+  }
+
+  function sortByDateDesc(list){
+    if(!Array.isArray(list)) return list;
+    list.sort(function(a,b){
+      var ta = parseDateToTs(a && a.date);
+      var tb = parseDateToTs(b && b.date);
+      return tb - ta;
+    });
+    return list;
+  }
+
   async function renderPreview(){
     var container = document.getElementById('news-preview');
     if(!container) return;
@@ -21,6 +48,8 @@
     var list = [];
     try{ list = await fetchNews(); }
     catch(_e){ container.innerHTML = '<div class="small" style="color:#f66">Haberler yüklenemedi.</div>'; return; }
+
+    sortByDateDesc(list);
 
     if(!list || list.length === 0){
       container.innerHTML = '<div class="small">Henüz haber yok.</div>';
@@ -43,6 +72,7 @@
     var list = [];
     try{ list = await fetchNews(); }catch(_e){ listEl.innerHTML = '<p>Haberler yüklenemedi.</p>'; return; }
     if(list.length === 0){ listEl.innerHTML = '<p>Henüz haber yok.</p>'; return; }
+    sortByDateDesc(list);
     var html = '';
     list.forEach(function(it){
       var img = it.image || 'assets/images/default.png';
