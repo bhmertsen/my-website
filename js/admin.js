@@ -14,6 +14,7 @@
 
     var form = document.getElementById('news-form');
     var listEl = document.getElementById('news-list-admin');
+    var messagesListEl = document.getElementById('messages-list-admin');
 
     function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
@@ -43,6 +44,17 @@
       }
     }
 
+    async function loadMessages(){
+      if(!messagesListEl) return;
+      messagesListEl.innerHTML = '<div class="small">Yükleniyor...</div>';
+      try{
+        var msgs = await apiFetch('/api/messages');
+        renderMessages(msgs || []);
+      }catch(err){
+        messagesListEl.innerHTML = '<div class="small" style="color:#f66">Mesajlar yüklenemedi. Sunucuya bağlanılamıyor.</div>';
+      }
+    }
+
     function readFileAsDataURL(file){
       return new Promise(function(resolve,reject){
         var fr = new FileReader();
@@ -65,6 +77,28 @@
         right.appendChild(edit); right.appendChild(del);
         div.appendChild(left); div.appendChild(right);
         listEl.appendChild(div);
+      });
+    }
+
+    function renderMessages(items){
+      if(!messagesListEl) return;
+      if(!items || items.length === 0){
+        messagesListEl.innerHTML = '<div class="small">Henüz mesaj yok.</div>';
+        return;
+      }
+      messagesListEl.innerHTML = '';
+      items.forEach(function(msg){
+        var wrap = document.createElement('div'); wrap.className = 'message-item-admin';
+        var top = document.createElement('div');
+        var created = msg.createdAt ? new Date(msg.createdAt).toLocaleString('tr-TR') : '';
+        var namePart = '<strong>'+escapeHtml(msg.name||'')+'</strong>';
+        var phonePart = msg.phone ? ' <span class="small">('+escapeHtml(msg.phone)+')</span>' : '';
+        var datePart = created ? '<div class="small">'+escapeHtml(created)+'</div>' : '';
+        top.innerHTML = namePart + phonePart + datePart;
+        var body = document.createElement('div'); body.className = 'small'; body.textContent = msg.message || '';
+        wrap.appendChild(top);
+        wrap.appendChild(body);
+        messagesListEl.appendChild(wrap);
       });
     }
 
@@ -135,6 +169,7 @@
     document.getElementById('logout').addEventListener('click', function(){ sessionStorage.removeItem('adminToken'); location.href='login.html'; });
 
     loadList();
+    loadMessages();
 
     // Live broadcast settings management
     (function(){

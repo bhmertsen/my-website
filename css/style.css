@@ -154,8 +154,8 @@ body.sidebar-open{overflow:hidden}
 .social-row a:hover{background:rgba(255,255,255,0.03);color:var(--accent)}
 
 /* News grid similar to screenshot */
-.news-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;padding:40px 0}
-.home-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.news-grid{padding:40px 0}
+.news-grid #news-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .news-large{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:16/9}
 .news-large img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .news-caption{position:absolute;left:0;right:0;bottom:18px;padding:18px;text-align:center;color:#fff}
@@ -300,7 +300,7 @@ footer{border-top:1px solid rgba(255,255,255,0.03);padding:20px 0;background:tra
   .site-wrapper{flex-direction:column}
   .top-nav .container{padding:0 20px}
   .menu-toggle{display:inline-block}
-  .news-grid{grid-template-columns:1fr}
+  .news-grid #news-preview{grid-template-columns:repeat(2,1fr)}
   .news-row{flex-direction:row}
   .news-card-item img{aspect-ratio:16/9;object-fit:cover}
 }
@@ -317,7 +317,7 @@ footer{border-top:1px solid rgba(255,255,255,0.03);padding:20px 0;background:tra
     .main-area{padding:0;margin-left:0}
     .news-hero h1{font-size:24px}
     .news-sub{font-size:13px}
-    .home-grid{grid-template-columns:1fr}
+    .news-grid #news-preview{grid-template-columns:1fr}
 }
 
 /* Hide admin panel link in menus; access via /admin */

@@ -22,19 +22,17 @@
     try{ list = await fetchNews(); }
     catch(_e){ container.innerHTML = '<div class="small" style="color:#f66">Haberler yüklenemedi.</div>'; return; }
 
+    if(!list || list.length === 0){
+      container.innerHTML = '<div class="small">Henüz haber yok.</div>';
+      return;
+    }
+
     var html = '';
-    html += '<div class="home-grid">';
-    for(var i=0;i<2 && i<list.length;i++){
+    var max = Math.min(list.length, 6);
+    for(var i=0;i<max;i++){
       var it = list[i];
-      html += '<article class="news-large"><a href="news.html#n'+(it._id||it.id)+'"><img src="'+(it.image||'assets/images/default.png')+'" alt="'+escapeHtml(it.title)+'"><div class="news-caption"><h3>'+escapeHtml(it.title)+'</h3><div class="date">'+escapeHtml(it.date)+'</div></div></a></article>';
+      html += '<article class="news-large"><a href="news.html#n'+(it._id||it.id)+'"><img src="'+(it.image||'assets/images/default.png')+'" alt="'+escapeHtml(it.title)+'"><div class="news-caption"><h3>'+escapeHtml(it.title)+'</h3><div class="date">'+escapeHtml(it.date||'')+'</div></div></a></article>';
     }
-    html += '</div>';
-    html += '<div class="news-row">';
-    for(var j=2;j<list.length && j<5;j++){
-      var it2 = list[j];
-      html += '<article class="news-small"><a href="news.html#n'+(it2._id||it2.id)+'"><img src="'+(it2.image||'assets/images/default.png')+'" alt="'+escapeHtml(it2.title)+'"></a></article>';
-    }
-    html += '</div>';
 
     container.innerHTML = html;
   }

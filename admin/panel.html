@@ -17,6 +17,8 @@
     .form-row input::placeholder,.form-row textarea::placeholder{color:rgba(189,189,189,0.5)}
     .news-list-admin{display:flex;flex-direction:column;gap:12px}
     .news-item-admin{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent}
+    .messages-list-admin{display:flex;flex-direction:column;gap:10px;max-height:320px;overflow:auto}
+    .message-item-admin{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent}
     .small{font-size:13px;color:rgba(255,255,255,0.6)}
     .btn{padding:8px 10px;border-radius:8px;border:none;cursor:pointer}
     .btn-danger{background:#8b0000;color:#fff}
@@ -51,6 +53,11 @@
         <div style="margin-top:12px" class="card">
           <h3>Mevcut Haberler</h3>
           <div id="news-list-admin" class="news-list-admin"></div>
+        </div>
+
+        <div style="margin-top:12px" class="card">
+          <h3>Mesajlar</h3>
+          <div id="messages-list-admin" class="messages-list-admin"></div>
         </div>
       </div>
 
