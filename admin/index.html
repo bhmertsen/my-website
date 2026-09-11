@@ -2,11 +2,18 @@
 <html lang="tr">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0;url=login.html">
+  <meta http-equiv="refresh" content="0;url=/login">
   <title>Yönlendiriliyor...</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script>
+    if(sessionStorage.getItem('adminToken')){
+      window.location.replace('/admin/panel.html');
+    } else {
+      window.location.replace('/login');
+    }
+  </script>
 </head>
 <body>
-  <p>/admin girişine yönlendiriliyorsunuz. Eğer otomatik yönlendirme olmazsa <a href="login.html">buraya tıklayın</a>.</p>
+  <p>Giriş sayfasına yönlendiriliyorsunuz. Otomatik yönlendirme gerçekleşmezse <a href="/login">buraya tıklayın</a>.</p>
 </body>
 </html>

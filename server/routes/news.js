@@ -8,12 +8,23 @@ function authMiddleware(req, res, next){
   if(!auth || !auth.startsWith('Bearer ')) return res.status(401).json({ error: 'Unauthorized' });
   const token = auth.split(' ')[1];
   try{
-    const data = jwt.verify(token, process.env.JWT_SECRET || 'change_this');
+    const secret = process.env.JWT_SECRET || 'change_this';
+    const data = jwt.verify(token, secret);
     req.user = data;
     next();
   }catch(e){
     return res.status(401).json({ error: 'Invalid token' });
   }
+}
+
+function sanitizeNewsPayload(body){
+  const title = typeof body.title === 'string' ? body.title.trim() : '';
+  const date = typeof body.date === 'string' ? body.date.trim() : '';
+  const image = typeof body.image === 'string' ? body.image.trim() : '';
+  const excerpt = typeof body.excerpt === 'string' ? body.excerpt.trim() : '';
+  const content = typeof body.content === 'string' ? body.content.trim() : '';
+  const published = Boolean(body.published !== false);
+  return { title, date, image, excerpt, content, published };
 }
 
 // GET /api/news
@@ -29,8 +40,11 @@ router.get('/', async (req, res) => {
 // POST /api/news (protected)
 router.post('/', authMiddleware, async (req, res) => {
   try{
-    const obj = req.body;
-    const n = new News(obj);
+    const payload = sanitizeNewsPayload(req.body || {});
+    if(!payload.title || !payload.date){
+      return res.status(400).json({ error: 'title and date are required' });
+    }
+    const n = new News(payload);
     const saved = await n.save();
     res.json(saved);
   }catch(e){
@@ -41,7 +55,8 @@ router.post('/', authMiddleware, async (req, res) => {
 // PUT /api/news/:id (protected)
 router.put('/:id', authMiddleware, async (req, res) => {
   try{
-    const updated = await News.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const payload = sanitizeNewsPayload(req.body || {});
+    const updated = await News.findByIdAndUpdate(req.params.id, payload, { new: true });
     if(!updated) return res.status(404).json({ error: 'not found' });
     res.json(updated);
   }catch(e){

@@ -46,9 +46,9 @@ router.get('/', async (req, res) => {
 router.put('/', authMiddleware, async (req, res) => {
   try{
     const payload = {
-      channel: req.body.channel || '',
-      datetime: req.body.datetime || '',
-      url: req.body.url || ''
+      channel: typeof req.body.channel === 'string' ? req.body.channel.trim() : '',
+      datetime: typeof req.body.datetime === 'string' ? req.body.datetime.trim() : '',
+      url: typeof req.body.url === 'string' ? req.body.url.trim() : ''
     };
     const updated = await Live.findOneAndUpdate({}, payload, { new: true, upsert: true, setDefaultsOnInsert: true });
     res.json(updated);

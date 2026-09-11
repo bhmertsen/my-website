@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/login", "destination": "/admin/login.html" },
+    { "source": "/admin", "destination": "/admin/panel.html" }
+  ]
+}

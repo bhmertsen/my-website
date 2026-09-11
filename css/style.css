@@ -1,15 +1,15 @@
 /* Basic reset */
 *{box-sizing:border-box}
 :root{
-	--bg:#070707; /* page background */
-	--panel:#0f0f10; /* sidebar / panels */
-	--muted:#bdbdbd; /* body text */
-	--accent:#930808; /* user requested accent */
-	--card:#121212; /* card backgrounds */
+	--bg:#090b0e; /* page background */
+	--panel:#0f131a; /* sidebar / panels */
+	--muted:#cbd5e1; /* body text */
+	--accent:#c70039; /* user requested accent */
+	--card:#131722; /* card backgrounds */
 	--glass: rgba(255,255,255,0.03);
 	--container-width:1100px;
 }
-html,body{height:100%;font-family:Inter, Arial, Helvetica, sans-serif;background:var(--bg);color:var(--muted);-webkit-font-smoothing:antialiased}
+html,body{height:100%;font-family:'Inter', -apple-system, BlinkMacSystemFont, Arial, sans-serif;background:var(--bg);color:var(--muted);-webkit-font-smoothing:antialiased}
 
 .container{max-width:var(--container-width);margin:0 auto;padding:0 20px}
 
@@ -306,61 +306,80 @@ footer{border-top:1px solid rgba(255,255,255,0.03);padding:20px 0;background:tra
 }
 
 @media(max-width:600px){
-	    /* Mobile header: nav in two rows, cleaner buttons */
-	    .top-nav .container{
-	        flex-direction:column;
-	        align-items:stretch;
-	        gap:8px;
-	        height:auto;
-	        padding:8px 16px;
-	    }
-	    .nav-left{
-	        width:100%;
-	        justify-content:space-between;
-	    }
-	    .home-button{
-	        flex:1;
-	        justify-content:center;
-	    }
-	    .top-links{
-	        display:flex;
-	        flex-wrap:wrap;
-	        justify-content:center;
-	        gap:6px;
-	        margin-left:0;
-	    }
-	    .top-links a{
-	        background:rgba(255,255,255,0.06);
-	        padding:6px 10px;
-	        border-radius:999px;
-	        font-size:12px;
-	    }
-	    .hero .hero-banner{display:flex;justify-content:center;align-items:center;padding:0 20px}
-	    .hero .hero-banner img{max-width:320px;width:100%;margin:0 auto}
-	    .news-large{aspect-ratio:16/9}
-	    .news-row{flex-direction:column}
-	    .main-area{padding:0;margin-left:0}
-	    .news-hero h1{font-size:24px}
-	    .news-sub{font-size:13px}
-	    .news-grid #news-preview{grid-template-columns:1fr}
-	}
+    /* Mobile header: nav in two rows, cleaner touch buttons */
+    .top-nav .container{
+        flex-direction:column;
+        align-items:stretch;
+        gap:10px;
+        height:auto;
+        padding:12px 16px;
+    }
+    .nav-left{
+        width:100%;
+        justify-content:space-between;
+        gap:10px;
+    }
+    .home-button{
+        flex:1;
+        justify-content:center;
+        min-height:44px;
+        font-size:15px;
+    }
+    .top-links{
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:8px;
+        margin-left:0;
+    }
+    .top-links a{
+        background:rgba(255,255,255,0.06);
+        padding:8px 14px;
+        border-radius:999px;
+        font-size:13px;
+        font-weight:500;
+        min-height:38px;
+        display:inline-flex;
+        align-items:center;
+    }
+    .top-links a:hover{
+        background:rgba(255,255,255,0.12);
+    }
+    .hero{padding:28px 0 24px}
+    .hero .hero-banner{display:flex;justify-content:center;align-items:center;padding:0 12px}
+    .hero .hero-banner img{max-width:100%;border-radius:12px}
+    .hero-title{font-size:18px;margin-top:14px}
+    .hero .lead{font-size:14px;padding:0 8px}
+    .news-large{aspect-ratio:16/9}
+    .news-row{flex-direction:column}
+    .main-area{padding:0;margin-left:0}
+    .news-hero h1{font-size:24px}
+    .news-sub{font-size:13px}
+    .news-grid #news-preview{grid-template-columns:1fr}
+    .live-timer{gap:6px}
+    .live-timer .unit{min-width:54px;padding:8px 6px}
+    .live-timer .num{font-size:18px}
+    .live-timer .label{font-size:10px}
+    .contact-card input, .contact-card textarea{font-size:16px}
+}
 
 /* Hide admin panel link in menus; access via /admin */
 .admin-link{display:none !important}
 
 /* Live broadcast section */
 .live-section{position:relative;margin:10px 0 24px}
-.live-card{background:linear-gradient(135deg, rgba(147,8,8,0.85), rgba(147,8,40,0.85));border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:18px;color:#fff;box-shadow:0 16px 50px rgba(147,8,8,0.35)}
+.live-card{background:linear-gradient(135deg, rgba(199,0,57,0.9), rgba(120,0,30,0.9));border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:18px;color:#fff;box-shadow:0 16px 50px rgba(199,0,57,0.3)}
 .live-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
-.live-head .badge{background:#00000030;padding:6px 10px;border-radius:999px;font-weight:700;letter-spacing:.6px}
+.live-head .badge{background:#00000040;padding:6px 12px;border-radius:999px;font-weight:700;letter-spacing:.6px;font-size:12px}
 .live-head .channel{font-weight:700}
-.live-timer{display:flex;gap:12px;justify-content:center;align-items:baseline;margin:8px 0}
-.live-timer .unit{display:flex;flex-direction:column;align-items:center;background:rgba(0,0,0,0.18);padding:10px;border-radius:10px;min-width:68px}
-.live-timer .num{font-size:22px;font-weight:800;line-height:1}
-.live-timer .label{font-size:11px;opacity:.9;margin-top:4px}
-.live-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;color:#ffe}
+.live-timer{display:flex;gap:10px;justify-content:center;align-items:baseline;margin:12px 0}
+.live-timer .unit{display:flex;flex-direction:column;align-items:center;background:rgba(0,0,0,0.25);padding:10px 14px;border-radius:10px;min-width:64px;border:1px solid rgba(255,255,255,0.06)}
+.live-timer .num{font-size:24px;font-weight:800;line-height:1;color:#fff}
+.live-timer .label{font-size:11px;opacity:.9;margin-top:5px;font-weight:600;letter-spacing:0.5px}
+.live-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;color:#ffe}
 .live-foot .date{font-size:13px;opacity:.95}
-.live-foot .cta{background:#fff;color:#900;padding:8px 10px;border-radius:8px;text-decoration:none;font-weight:700}
+.live-foot .cta{background:#fff;color:#c70039;padding:9px 16px;border-radius:8px;text-decoration:none;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
+.live-foot .cta:hover{background:#f8f9fa}
 .live-live{animation:pulse 1.2s infinite;display:inline-flex;align-items:center;gap:6px}
 .live-live i{color:#ffb}
 @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}

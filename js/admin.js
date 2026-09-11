@@ -5,11 +5,11 @@
   }
   function authRequired(){
     var t = getToken();
-    if(!t){ location.href = 'login.html'; }
+    if(!t){ location.href = '/login'; }
   }
 
   // only run on panel page
-  if(location.pathname.endsWith('/panel.html') || location.pathname.endsWith('admin/panel.html')){
+  if(location.pathname.endsWith('/panel.html') || location.pathname.endsWith('admin/panel.html') || location.pathname.endsWith('/admin') || location.pathname.endsWith('/admin/')){
     authRequired();
 
     var form = document.getElementById('news-form');
@@ -66,15 +66,22 @@
 
     function renderList(items){
       listEl.innerHTML = '';
+      if(!items || items.length === 0){
+        listEl.innerHTML = '<div class="small">Henüz kayıtlı haber bulunmuyor.</div>';
+        return;
+      }
       items.forEach(function(it){
         var div = document.createElement('div'); div.className='news-item-admin';
-        var left = document.createElement('div'); left.innerHTML = '<strong>'+escapeHtml(it.title)+'</strong><div class="small">'+escapeHtml(it.date||'')+'</div>';
-        var right = document.createElement('div');
-        var edit = document.createElement('button'); edit.className='btn'; edit.textContent='Düzenle';
-        var del = document.createElement('button'); del.className='btn btn-danger'; del.textContent='Sil';
+        var left = document.createElement('div');
+        var newsId = it._id || it.id || '';
+        left.innerHTML = '<strong>'+escapeHtml(it.title)+'</strong><div class="small">'+escapeHtml(it.date||'')+'</div>';
+        var right = document.createElement('div'); right.className = 'news-item-actions';
+        var view = document.createElement('a'); view.className = 'btn btn-view'; view.href = '/news.html#n' + newsId; view.target = '_blank'; view.innerHTML = '<i class="fa fa-eye"></i> Gör';
+        var edit = document.createElement('button'); edit.className='btn btn-secondary'; edit.innerHTML='<i class="fa fa-pen"></i> Düzenle';
+        var del = document.createElement('button'); del.className='btn btn-danger'; del.innerHTML='<i class="fa fa-trash"></i> Sil';
         edit.addEventListener('click', function(){ populateForm(it); });
         del.addEventListener('click', function(){ if(confirm('Silinsin mi?')){ removeItem(it); } });
-        right.appendChild(edit); right.appendChild(del);
+        right.appendChild(view); right.appendChild(edit); right.appendChild(del);
         div.appendChild(left); div.appendChild(right);
         listEl.appendChild(div);
       });
@@ -107,7 +114,7 @@
       form.date.value = it.date || '';
       form.image.value = it.image && it.image.indexOf('data:') === -1 ? it.image : '';
       var preview = document.getElementById('image-preview');
-      if(it.image){ preview.src = it.image; } else { preview.src = '../assets/images/default.png'; }
+      if(it.image){ preview.src = it.image; } else { preview.src = '/assets/images/default.png'; }
       form.excerpt.value = it.excerpt || '';
       form.content.value = it.content || '';
       form.dataset.editId = it._id || it.id || '';
@@ -166,7 +173,17 @@
 
     document.getElementById('clear-form').addEventListener('click', function(){ form.reset(); delete form.dataset.editId; });
 
-    document.getElementById('logout').addEventListener('click', function(){ sessionStorage.removeItem('adminToken'); location.href='login.html'; });
+    var toggleNewsBtn = document.getElementById('toggle-news-list');
+    var newsCard = document.getElementById('news-list-card');
+    if(toggleNewsBtn && newsCard){
+      toggleNewsBtn.addEventListener('click', function(){
+        var isHidden = newsCard.style.display === 'none';
+        newsCard.style.display = isHidden ? 'block' : 'none';
+        toggleNewsBtn.innerHTML = isHidden ? '<i class="fa fa-eye"></i> Mevcut Haberleri Gizle' : '<i class="fa fa-eye-slash"></i> Mevcut Haberleri Göster';
+      });
+    }
+
+    document.getElementById('logout').addEventListener('click', function(){ sessionStorage.removeItem('adminToken'); location.href='/login'; });
 
     loadList();
     loadMessages();

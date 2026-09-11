@@ -22,7 +22,7 @@ Quick start
    npm install
    npm run dev   # or npm start
 
-3) Open http://localhost:3000 in your browser. Admin login: username `admin`, password `pass` (or whatever you set in .env).
+3) Open http://localhost:3000 in your browser. Admin login page is at `/login` (or `/admin`). Admin login credentials: username `admin`, password `pass` (or whatever you set in .env). Local fallback login: `cenk` / `siyasam2025`.
 
 Notes
 - This is a minimal MVP. Do NOT use the example JWT secret or admin password in production.

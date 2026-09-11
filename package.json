@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "description": "Static site with Vercel serverless API",
   "scripts": {
+    "dev": "npm --prefix server run dev",
+    "start": "npm --prefix server start",
     "vercel-build": "echo 'no build'"
   },
   "dependencies": {

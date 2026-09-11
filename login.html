@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Girişi — Cenk Özatıcı</title>
+  <link href="/css/style.css" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/assets/images/logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg, #0b0d12);
+      color: var(--muted, #cbd5e1);
+      padding: 20px;
+      margin: 0;
+    }
+    .admin-wrap {
+      max-width: 420px;
+      width: 100%;
+      padding: 32px;
+      background: var(--card, #12151c);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    }
+    .admin-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .admin-logo img {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid var(--accent, #c70039);
+    }
+    .admin-logo h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #fff;
+    }
+    .admin-logo .subtitle {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .admin-wrap input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 14px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .admin-wrap input:focus {
+      border-color: var(--accent, #c70039);
+    }
+    .admin-wrap button.submit-btn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 12px;
+      background: var(--accent, #c70039);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+    .admin-wrap button.submit-btn:hover {
+      background: #a5002f;
+    }
+    .login-error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-top: 14px;
+      font-size: 13px;
+      display: none;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 20px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-link:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-wrap">
+    <div class="admin-logo">
+      <img src="/assets/images/logo.png" alt="Logo" onerror="this.src='/assets/images/default.png'">
+      <div>
+        <h2>Yönetici Girişi</h2>
+        <div class="subtitle">Cenk Özatıcı Yönetim Paneli</div>
+      </div>
+    </div>
+    <form id="admin-login">
+      <div class="form-group">
+        <label for="username">Kullanıcı Adı</label>
+        <input id="username" name="username" placeholder="Kullanıcı adı" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="password">Şifre</label>
+        <input id="password" name="password" type="password" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="submit-btn"><i class="fa fa-arrow-right-to-bracket"></i> Giriş Yap</button>
+    </form>
+    <div class="login-error" id="login-error">Giriş başarısız. Kullanıcı adı/şifre yanlış veya sunucuya bağlanılamıyor.</div>
+
+    <div style="text-align:center;">
+      <a href="/index.html" class="back-link"><i class="fa fa-arrow-left"></i> Ana Sayfaya Dön</a>
+    </div>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script>
+    async function apiLogin(username, password){
+      try{
+        var base = (typeof window !== 'undefined' && window.API_BASE) ? window.API_BASE : '';
+        var res = await fetch(base + '/api/login', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ username, password })
+        });
+        if(!res.ok) throw new Error('login failed');
+        var data = await res.json();
+        return data.token;
+      }catch(e){
+        return null;
+      }
+    }
+
+    document.getElementById('admin-login').addEventListener('submit', async function(e){
+      e.preventDefault();
+      var u = e.target.username.value.trim();
+      var p = e.target.password.value;
+      var errEl = document.getElementById('login-error');
+      errEl.style.display = 'none';
+
+      // try API login
+      var token = await apiLogin(u,p);
+      if(token){
+        sessionStorage.setItem('adminToken', token);
+        window.location.href = '/admin/panel.html';
+        return;
+      }
+
+      errEl.textContent = 'Giriş başarısız. Kullanıcı adı veya şifre yanlış.';
+      errEl.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

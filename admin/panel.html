@@ -3,90 +3,392 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Admin Panel — Haber Yönetimi</title>
-  <link href="../css/style.css" rel="stylesheet">
+  <title>Admin Panel — Cenk Özatıcı</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
   <link rel="icon" type="image/png" href="/assets/images/logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
-    .panel{max-width:1100px;margin:30px auto;padding:20px}
-    .panel h2{margin-bottom:12px;color:#fff}
-    .grid{display:grid;grid-template-columns:1fr 320px;gap:20px}
-    /* use dark card style consistent with site */
-    .card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.6);color:var(--muted)}
-    .form-row{display:flex;gap:8px}
-    .form-row input,.form-row textarea{flex:1;padding:10px;border:1px solid rgba(255,255,255,0.04);border-radius:8px;background:transparent;color:var(--muted)}
-    .form-row input::placeholder,.form-row textarea::placeholder{color:rgba(189,189,189,0.5)}
-    .news-list-admin{display:flex;flex-direction:column;gap:12px}
-    .news-item-admin{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent}
-    .messages-list-admin{display:flex;flex-direction:column;gap:10px;max-height:320px;overflow:auto}
-    .message-item-admin{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent}
-    .small{font-size:13px;color:rgba(255,255,255,0.6)}
-    .btn{padding:8px 10px;border-radius:8px;border:none;cursor:pointer}
-    .btn-danger{background:#8b0000;color:#fff}
-    .btn-primary{background:var(--accent);color:#fff}
-    .logout{float:right}
-    .image-preview{width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:8px;border:1px solid rgba(255,255,255,0.03)}
-    label.file-label{display:block;margin-top:8px;color:var(--muted);font-size:13px}
+    body {
+      background: var(--bg, #0b0d12);
+      color: var(--muted, #cbd5e1);
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+    }
+    .admin-navbar {
+      background: rgba(18, 21, 28, 0.95);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 12px 0;
+    }
+    .admin-nav-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 17px;
+    }
+    .admin-brand img {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid var(--accent, #c70039);
+    }
+    .admin-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .admin-nav-links a {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 14px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .admin-nav-links a:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .panel {
+      max-width: 1140px;
+      margin: 24px auto;
+      padding: 0 20px 40px;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 14px;
+    }
+    .panel-header h2 {
+      margin: 0;
+      color: #fff;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .admin-nav-links {
+        display: none;
+      }
+    }
+    .card {
+      background: var(--card, #12151c);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      color: var(--muted, #cbd5e1);
+    }
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      color: #fff;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 500;
+    }
+    #news-form input, #news-form textarea, #live-form input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.25);
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #news-form input:focus, #news-form textarea:focus, #live-form input:focus {
+      border-color: var(--accent, #c70039);
+    }
+    #news-form input::placeholder, #news-form textarea::placeholder, #live-form input::placeholder {
+      color: rgba(255, 255, 255, 0.35);
+    }
+    #news-form textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .news-list-admin {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .news-item-admin {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.02);
+      transition: background 0.2s;
+    }
+    .news-item-admin:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .news-item-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .messages-list-admin {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 340px;
+      overflow-y: auto;
+    }
+    .message-item-admin {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .small {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+    .btn {
+      padding: 9px 15px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--accent, #c70039);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #a5002f;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+    .btn-danger {
+      background: rgba(220, 38, 38, 0.2);
+      color: #fca5a5;
+      border: 1px solid rgba(220, 38, 38, 0.4);
+    }
+    .btn-danger:hover {
+      background: #dc2626;
+      color: #fff;
+    }
+    .btn-view {
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      text-decoration: none;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .btn-view:hover {
+      background: #2563eb;
+      color: #fff;
+    }
+    .image-preview {
+      width: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-top: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.2);
+    }
+    label.file-label {
+      display: block;
+      margin-top: 8px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 13px;
+    }
+    .file-input-wrap {
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
-  <div class="panel">
-    <div style="display:flex;align-items:center;justify-content:space-between"><h2>Haber Yönetimi (Vitrin)</h2><button class="btn logout" id="logout">Çıkış</button></div>
+  <!-- Admin Top Navigation Bar -->
+  <header class="admin-navbar">
+    <div class="admin-nav-inner">
+      <a href="/admin/panel.html" class="admin-brand">
+        <img src="/assets/images/logo.png" alt="Logo" onerror="this.src='/assets/images/default.png'">
+        <span>Cenk Özatıcı <small style="font-weight:400;opacity:0.7">Admin</small></span>
+      </a>
+      <ul class="admin-nav-links">
+        <li><a href="/index.html" target="_blank" rel="noopener"><i class="fa fa-arrow-up-right-from-square"></i> Siteyi Gör</a></li>
+        <li><a href="/news.html" target="_blank" rel="noopener"><i class="fa fa-newspaper"></i> Haberler</a></li>
+        <li><a href="/about.html" target="_blank" rel="noopener"><i class="fa fa-user"></i> Özgeçmiş</a></li>
+      </ul>
+      <div style="display:flex;align-items:center;gap:10px">
+        <a href="/index.html" class="btn btn-secondary"><i class="fa fa-globe"></i> Siteye Dön</a>
+        <button class="btn btn-danger" id="logout"><i class="fa fa-right-from-bracket"></i> Çıkış</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="panel">
+    <div class="panel-header">
+      <h2><i class="fa fa-gauge"></i> Yönetim Paneli</h2>
+      <div class="small"><i class="fa fa-shield-halved"></i> Güvenli Yönetici Oturumu</div>
+    </div>
 
     <div class="grid">
+      <!-- Main Content Column -->
       <div>
         <div class="card">
-          <h3>Yeni Haber Ekle</h3>
+          <h3><i class="fa fa-pen-to-square"></i> Haber Ekle / Düzenle</h3>
           <form id="news-form">
-            <input name="title" placeholder="Başlık" required>
-            <input name="date" placeholder="GG Ay Yıl veya 26 Nisan 2023" required>
-            <input name="image" placeholder="Resim URL (opsiyonel)">
-            <label class="file-label">Veya bilgisayarınızdan resim yükleyin (opsiyonel):
-              <input type="file" id="imageFile" accept="image/*">
-            </label>
-            <img id="image-preview" class="image-preview" src="../assets/images/default.png" alt="preview">
-            <textarea name="excerpt" placeholder="Kısa özet"></textarea>
-            <textarea name="content" placeholder="İçerik"></textarea>
-            <div style="margin-top:10px;display:flex;gap:8px"><button class="btn btn-primary" type="submit">Kaydet</button><button type="button" id="clear-form" class="btn">Temizle</button></div>
+            <div class="form-group">
+              <label for="titleInput">Haber Başlığı</label>
+              <input id="titleInput" name="title" placeholder="Örn: Yeni Dönem Vizyon Açıklaması" required>
+            </div>
+            <div class="form-group">
+              <label for="dateInput">Tarih</label>
+              <input id="dateInput" name="date" placeholder="GG.AA.YYYY veya 26 Nisan 2025" required>
+            </div>
+            <div class="form-group">
+              <label for="imageInput">Görsel URL (İsteğe bağlı)</label>
+              <input id="imageInput" name="image" placeholder="https://... veya /assets/images/...">
+              <label class="file-label" for="imageFile">
+                <i class="fa fa-upload"></i> Veya bilgisayarınızdan resim yükleyin:
+              </label>
+              <div class="file-input-wrap">
+                <input type="file" id="imageFile" accept="image/*">
+              </div>
+              <img id="image-preview" class="image-preview" src="/assets/images/default.png" alt="Önizleme">
+            </div>
+            <div class="form-group">
+              <label for="excerptInput">Kısa Özet</label>
+              <textarea id="excerptInput" name="excerpt" placeholder="Haber kartlarında görünecek kısa özet metin..."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="contentInput">Haber Detayı / İçerik</label>
+              <textarea id="contentInput" name="content" rows="6" placeholder="Haberin tam metni..."></textarea>
+            </div>
+            <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-disk"></i> Haberi Kaydet</button>
+              <button type="button" id="clear-form" class="btn btn-secondary"><i class="fa fa-rotate-left"></i> Formu Temizle</button>
+              <button type="button" id="toggle-news-list" class="btn btn-secondary" style="margin-left:auto"><i class="fa fa-eye-slash"></i> Mevcut Haberleri Göster</button>
+            </div>
           </form>
         </div>
 
-        <div style="margin-top:12px" class="card">
-          <h3>Mevcut Haberler</h3>
+        <!-- Mevcut Haberler bölümü (varsayılan olarak gizlendi) -->
+        <div style="margin-top:20px;display:none" class="card" id="news-list-card">
+          <h3><i class="fa fa-list-check"></i> Mevcut Haberler</h3>
           <div id="news-list-admin" class="news-list-admin"></div>
         </div>
 
-        <div style="margin-top:12px" class="card">
-          <h3>Mesajlar</h3>
+        <div style="margin-top:20px" class="card">
+          <h3><i class="fa fa-envelope"></i> İletişim Formu Mesajları</h3>
           <div id="messages-list-admin" class="messages-list-admin"></div>
         </div>
       </div>
 
+      <!-- Right Column: Sidebar Settings -->
       <aside>
         <div class="card">
-          <h3>Yardım</h3>
-          <p class="small">Buradaki veriler tarayıcıda (localStorage) saklanır. İleride sunucu (MongoDB) bağlantısı eklenecektir. Mevcut verileri silmek için tarayıcı localStorage'ını temizleyebilirsiniz.</p>
+          <h3><i class="fa fa-tower-broadcast"></i> Canlı Yayın Ayarları</h3>
+          <form id="live-form">
+            <div class="form-group">
+              <label for="liveChannel">Kanal / Program Adı</label>
+              <input id="liveChannel" placeholder="Örn: Halk TV - Gündem Özel">
+            </div>
+            <div class="form-group">
+              <label for="liveDateTime">Yayın Tarih & Saati</label>
+              <input id="liveDateTime" type="datetime-local">
+            </div>
+            <div class="form-group">
+              <label for="liveUrl">Yayın Linki (YouTube / Detay URL)</label>
+              <input id="liveUrl" placeholder="https://youtube.com/... veya news.html">
+            </div>
+            <div style="margin-top:16px;display:flex;gap:8px">
+              <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Yayını Kaydet</button>
+              <button type="button" id="live-clear" class="btn btn-secondary"><i class="fa fa-trash"></i> Temizle</button>
+            </div>
+            <div class="small" style="margin-top:12px;line-height:1.5">
+              <i class="fa fa-circle-info"></i> Bu ayarlar ana sayfadaki geri sayım sayacında ve canlı yayın modülünde anlık gösterilir.
+            </div>
+          </form>
         </div>
 
-        <div class="card" style="margin-top:12px">
-          <h3>Canlı Yayın Ayarları</h3>
-          <form id="live-form">
-            <div class="form-row" style="flex-direction:column">
-              <input id="liveChannel" placeholder="Kanal adı (ör. Halk TV)">
-              <input id="liveDateTime" type="datetime-local" placeholder="Tarih & Saat">
-              <input id="liveUrl" placeholder="Detay URL (opsiyonel)">
-            </div>
-            <div style="margin-top:10px;display:flex;gap:8px">
-              <button type="submit" class="btn btn-primary">Kaydet</button>
-              <button type="button" id="live-clear" class="btn">Temizle</button>
-            </div>
-            <div class="small" style="margin-top:8px">Bu bilgiler ana sayfadaki sayaçta gösterilir.</div>
-          </form>
+        <div class="card" style="margin-top:20px">
+          <h3><i class="fa fa-link"></i> Hızlı Bağlantılar</h3>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px">
+            <li><a href="/index.html" class="btn btn-secondary" style="width:100%;box-sizing:border-box" target="_blank"><i class="fa fa-house"></i> Ana Sayfayı Aç</a></li>
+            <li><a href="/news.html" class="btn btn-secondary" style="width:100%;box-sizing:border-box" target="_blank"><i class="fa fa-newspaper"></i> Haberler Sayfası</a></li>
+            <li><a href="/about.html" class="btn btn-secondary" style="width:100%;box-sizing:border-box" target="_blank"><i class="fa fa-user"></i> Özgeçmiş Sayfası</a></li>
+            <li><a href="/login" class="btn btn-secondary" style="width:100%;box-sizing:border-box"><i class="fa fa-key"></i> Giriş Sayfası (/login)</a></li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+          <h3><i class="fa fa-circle-question"></i> Bilgi & Durum</h3>
+          <p class="small" style="line-height:1.6;margin:0">
+            Verileriniz API / Veritabanı üzerinden yönetilmektedir. Yayınlanan haberler sitede anında güncellenir.
+          </p>
         </div>
       </aside>
     </div>
-  </div>
+  </main>
 
-  <script src="../js/config.js"></script>
-  <script src="../js/admin.js"></script>
+  <script src="/js/config.js"></script>
+  <script src="/js/admin.js"></script>
 </body>
 </html>
