@@ -44,12 +44,15 @@
       }
     }
 
+    var currentMessages = [];
+
     async function loadMessages(){
       if(!messagesListEl) return;
-      messagesListEl.innerHTML = '<div class="small">Yükleniyor...</div>';
+      messagesListEl.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:12px;text-align:center">Yükleniyor...</div>';
       try{
         var msgs = await apiFetch('/api/messages');
-        renderMessages(msgs || []);
+        currentMessages = Array.isArray(msgs) ? msgs : [];
+        renderMessages(currentMessages);
       }catch(err){
         messagesListEl.innerHTML = '<div class="small" style="color:#f66">Mesajlar yüklenemedi. Sunucuya bağlanılamıyor.</div>';
       }
@@ -90,22 +93,32 @@
     function renderMessages(items){
       if(!messagesListEl) return;
       if(!items || items.length === 0){
-        messagesListEl.innerHTML = '<div class="small">Henüz mesaj yok.</div>';
+        messagesListEl.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:12px;text-align:center">Henüz gelen mesaj bulunmuyor.</div>';
         return;
       }
       messagesListEl.innerHTML = '';
       items.forEach(function(msg){
         var wrap = document.createElement('div'); wrap.className = 'message-item-admin';
-        var top = document.createElement('div');
-        var created = msg.createdAt ? new Date(msg.createdAt).toLocaleString('tr-TR') : '';
-        var namePart = '<strong>'+escapeHtml(msg.name||'')+'</strong>';
-        var phonePart = msg.phone ? ' <span class="small">('+escapeHtml(msg.phone)+')</span>' : '';
-        var datePart = created ? '<div class="small">'+escapeHtml(created)+'</div>' : '';
-        top.innerHTML = namePart + phonePart + datePart;
-        var body = document.createElement('div'); body.className = 'small'; body.textContent = msg.message || '';
+        var top = document.createElement('div'); top.className = 'message-header';
+        var created = msg.createdAt ? new Date(msg.createdAt).toLocaleString('tr-TR', { dateStyle:'short', timeStyle:'short' }) : '';
+        var namePart = '<span class="message-author">'+escapeHtml(msg.name||'İsimsiz')+'</span>';
+        var phonePart = msg.phone ? '<span class="message-phone"><i class="fa-solid fa-phone" style="font-size:10px"></i> '+escapeHtml(msg.phone)+'</span>' : '';
+        var datePart = created ? '<span class="message-date">'+escapeHtml(created)+'</span>' : '';
+        top.innerHTML = '<div>' + namePart + phonePart + '</div>' + datePart;
+        var body = document.createElement('div'); body.className = 'message-body'; body.textContent = msg.message || '';
         wrap.appendChild(top);
         wrap.appendChild(body);
         messagesListEl.appendChild(wrap);
+      });
+    }
+
+    // Live preview for image input
+    var imageInputEl = document.getElementById('imageInput');
+    var imagePreviewEl = document.getElementById('image-preview');
+    if(imageInputEl && imagePreviewEl){
+      imageInputEl.addEventListener('input', function(){
+        var val = this.value.trim();
+        imagePreviewEl.src = val || '/assets/images/default.png';
       });
     }
 
@@ -181,6 +194,108 @@
         newsCard.style.display = isHidden ? 'block' : 'none';
         toggleNewsBtn.innerHTML = isHidden ? '<i class="fa fa-eye"></i> Mevcut Haberleri Gizle' : '<i class="fa fa-eye-slash"></i> Mevcut Haberleri Göster';
       });
+    }
+
+    function printMessagesList(){
+      if(!currentMessages || currentMessages.length === 0){
+        alert('Yazdırılacak mesaj bulunamadı.');
+        return;
+      }
+
+      var printWin = window.open('', '_blank', 'width=960,height=750');
+      if(!printWin){
+        alert('Yazdırma penceresi açılamadı. Lütfen tarayıcınızın açılır pencere (popup) engelleyicisini kapatın.');
+        return;
+      }
+
+      var rowsHtml = '';
+      currentMessages.forEach(function(msg, index){
+        var created = msg.createdAt ? new Date(msg.createdAt).toLocaleString('tr-TR', { dateStyle:'medium', timeStyle:'short' }) : '—';
+        var name = escapeHtml(msg.name || 'İsimsiz');
+        var phone = escapeHtml(msg.phone || 'Belirtilmedi');
+        var message = escapeHtml(msg.message || '').replace(/\n/g, '<br>');
+        rowsHtml += '<tr>' +
+          '<td class="text-center">' + (index + 1) + '</td>' +
+          '<td class="nowrap">' + created + '</td>' +
+          '<td><strong>' + name + '</strong></td>' +
+          '<td class="nowrap">' + phone + '</td>' +
+          '<td>' + message + '</td>' +
+        '</tr>';
+      });
+
+      var reportDate = new Date().toLocaleString('tr-TR', { dateStyle:'full', timeStyle:'short' });
+
+      var docHtml = '<!DOCTYPE html>' +
+        '<html lang="tr">' +
+        '<head>' +
+          '<meta charset="utf-8">' +
+          '<title>İletişim Mesajları Raporu — Cenk Özatıcı</title>' +
+          '<style>' +
+            '@page { size: A4 portrait; margin: 12mm 14mm; }' +
+            '* { box-sizing: border-box; }' +
+            'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color: #111827; margin: 0; padding: 24px; font-size: 13px; line-height: 1.4; }' +
+            '.header { border-bottom: 2px solid #c70039; padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end; }' +
+            '.header h1 { margin: 0; font-size: 20px; color: #111827; }' +
+            '.header .subtitle { font-size: 12px; color: #6b7280; margin-top: 4px; }' +
+            '.meta-info { text-align: right; font-size: 12px; color: #4b5563; }' +
+            'table { width: 100%; border-collapse: collapse; margin-top: 12px; }' +
+            'th, td { border: 1px solid #d1d5db; padding: 8px 10px; text-align: left; vertical-align: top; }' +
+            'th { background: #f3f4f6; color: #1f2937; font-weight: 600; font-size: 12px; }' +
+            'tr:nth-child(even) td { background: #fafafa; }' +
+            '.text-center { text-align: center; }' +
+            '.nowrap { white-space: nowrap; }' +
+            '.footer { margin-top: 24px; padding-top: 10px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #9ca3af; display: flex; justify-content: space-between; }' +
+            '@media print { body { padding: 0; } tr { page-break-inside: avoid; } }' +
+          '</style>' +
+        '</head>' +
+        '<body>' +
+          '<div class="header">' +
+            '<div>' +
+              '<h1>Cenk Özatıcı — Web Sitesi İletişim Mesajları</h1>' +
+              '<div class="subtitle">Gelen İletişim Formu Başvuruları Listesi</div>' +
+            '</div>' +
+            '<div class="meta-info">' +
+              '<div><strong>Rapor Tarihi:</strong> ' + reportDate + '</div>' +
+              '<div><strong>Toplam Mesaj:</strong> ' + currentMessages.length + ' adet</div>' +
+            '</div>' +
+          '</div>' +
+          '<table>' +
+            '<thead>' +
+              '<tr>' +
+                '<th style="width:36px" class="text-center">#</th>' +
+                '<th style="width:115px">Tarih</th>' +
+                '<th style="width:140px">Adı Soyadı</th>' +
+                '<th style="width:115px">Telefon No</th>' +
+                '<th>Mesaj</th>' +
+              '</tr>' +
+            '</thead>' +
+            '<tbody>' +
+              rowsHtml +
+            '</tbody>' +
+          '</table>' +
+          '<div class="footer">' +
+            '<span>Cenk Özatıcı Yönetim Paneli Sistem Raporu</span>' +
+            '<span>Sayfa 1</span>' +
+          '</div>' +
+          '<script>' +
+            'window.onload = function(){ window.focus(); window.print(); };' +
+          '<' + '/script>' +
+        '</body>' +
+        '</html>';
+
+      printWin.document.open();
+      printWin.document.write(docHtml);
+      printWin.document.close();
+    }
+
+    var printBtn = document.getElementById('print-messages-btn');
+    if(printBtn){
+      printBtn.addEventListener('click', printMessagesList);
+    }
+
+    var refreshMsgBtn = document.getElementById('refresh-messages-btn');
+    if(refreshMsgBtn){
+      refreshMsgBtn.addEventListener('click', loadMessages);
     }
 
     document.getElementById('logout').addEventListener('click', function(){ sessionStorage.removeItem('adminToken'); location.href='/login'; });

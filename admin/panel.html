@@ -3,387 +3,641 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Admin Panel — Cenk Özatıcı</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link href="/css/style.css" rel="stylesheet">
-  <link rel="icon" type="image/png" href="/assets/images/logo.png">
+  <title>Yönetim Paneli — Cenk Özatıcı</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="icon" type="image/png" href="/assets/images/logo.png">
   <style>
-    body {
-      background: var(--bg, #0b0d12);
-      color: var(--muted, #cbd5e1);
-      margin: 0;
-      font-family: 'Inter', sans-serif;
+    :root {
+      --bg: #0b0e14;
+      --card: #131822;
+      --card-hover: #171e2b;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(199, 0, 57, 0.6);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #c70039;
+      --accent-hover: #a5002f;
+      --danger: #dc2626;
+      --success: #16a34a;
     }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Navbar */
     .admin-navbar {
-      background: rgba(18, 21, 28, 0.95);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(10px);
+      background: rgba(19, 24, 34, 0.95);
+      border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
       z-index: 100;
-      padding: 12px 0;
+      backdrop-filter: blur(12px);
     }
-    .admin-nav-inner {
-      max-width: 1140px;
+    .nav-container {
+      max-width: 1320px;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 12px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
     }
-    .admin-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: #fff;
-      font-weight: 700;
-      font-size: 17px;
-    }
-    .admin-brand img {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      border: 2px solid var(--accent, #c70039);
-    }
-    .admin-nav-links {
+    .brand {
       display: flex;
       align-items: center;
       gap: 12px;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    .admin-nav-links a {
-      color: rgba(255, 255, 255, 0.7);
       text-decoration: none;
-      font-size: 14px;
-      padding: 6px 12px;
-      border-radius: 6px;
+      color: #fff;
+    }
+    .brand img {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      object-fit: cover;
+    }
+    .brand-title {
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: -0.3px;
+    }
+    .brand-badge {
+      background: rgba(199, 0, 57, 0.2);
+      color: #ff6b8b;
+      border: 1px solid rgba(199, 0, 57, 0.3);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13.5px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 500;
       transition: all 0.2s;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
     }
-    .admin-nav-links a:hover {
+    .nav-links a:hover {
       color: #fff;
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.05);
     }
-    .panel {
-      max-width: 1140px;
-      margin: 24px auto;
-      padding: 0 20px 40px;
-    }
-    .panel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      padding-bottom: 14px;
-    }
-    .panel-header h2 {
-      margin: 0;
-      color: #fff;
-      font-size: 22px;
+    .nav-actions {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 20px;
+
+    /* Main Container */
+    .admin-main {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
     }
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .admin-nav-links {
-        display: none;
-      }
-    }
-    .card {
-      background: var(--card, #12151c);
-      padding: 20px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-      color: var(--muted, #cbd5e1);
-    }
-    .card h3 {
-      margin-top: 0;
-      margin-bottom: 16px;
-      color: #fff;
-      font-size: 16px;
+    .page-title-row {
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .user-pill {
+      display: inline-flex;
+      align-items: center;
       gap: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .user-pill .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    /* 2-Column Grid Layout */
+    .admin-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 380px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* Card Component */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      margin-bottom: 24px;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    /* Forms & Inputs */
+    .form-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
     }
     .form-group {
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
-    .form-group label {
+    .form-label {
       display: block;
-      margin-bottom: 6px;
       font-size: 13px;
-      color: rgba(255, 255, 255, 0.8);
       font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 7px;
     }
-    #news-form input, #news-form textarea, #live-form input {
+    input[type="text"],
+    input[type="datetime-local"],
+    textarea {
       width: 100%;
-      box-sizing: border-box;
-      padding: 10px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 11px 14px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
       border-radius: 8px;
-      background: rgba(0, 0, 0, 0.25);
       color: #fff;
       font-size: 14px;
+      font-family: inherit;
       outline: none;
+      transition: all 0.2s;
+    }
+    input:focus, textarea:focus {
+      border-color: var(--border-focus);
+      background: rgba(0, 0, 0, 0.45);
+      box-shadow: 0 0 0 3px rgba(199, 0, 57, 0.15);
+    }
+    input::placeholder, textarea::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Image Upload & Preview Box */
+    .image-upload-section {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .image-upload-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .preview-thumb-wrap {
+      width: 120px;
+      height: 80px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #080a0f;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .preview-thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .upload-fields {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .file-btn-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .custom-file-input {
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: all 0.2s;
+      line-height: 1.4;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 4px 14px rgba(199, 0, 57, 0.35);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.07);
+      color: #e2e8f0;
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+    .btn-danger {
+      background: rgba(220, 38, 38, 0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(220, 38, 38, 0.3);
+    }
+    .btn-danger:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 6px;
+    }
+
+    /* Messages List */
+    .messages-list-admin {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .message-item-admin {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
       transition: border-color 0.2s;
     }
-    #news-form input:focus, #news-form textarea:focus, #live-form input:focus {
-      border-color: var(--accent, #c70039);
+    .message-item-admin:hover {
+      border-color: rgba(255, 255, 255, 0.15);
     }
-    #news-form input::placeholder, #news-form textarea::placeholder, #live-form input::placeholder {
-      color: rgba(255, 255, 255, 0.35);
+    .message-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
     }
-    #news-form textarea {
-      resize: vertical;
-      min-height: 80px;
+    .message-author {
+      font-weight: 600;
+      color: #fff;
+      font-size: 14px;
     }
+    .message-phone {
+      color: #38bdf8;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+    .message-date {
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .message-body {
+      color: #cbd5e1;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    /* Quick Links Sidebar */
+    .quick-links-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .quick-link-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .quick-link-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* News List */
     .news-list-admin {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      max-height: 500px;
+      max-height: 480px;
       overflow-y: auto;
     }
     .news-item-admin {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+      border-radius: 10px;
       gap: 12px;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      background: rgba(255, 255, 255, 0.02);
-      transition: background 0.2s;
-    }
-    .news-item-admin:hover {
-      background: rgba(255, 255, 255, 0.04);
     }
     .news-item-actions {
       display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-    .messages-list-admin {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 340px;
-      overflow-y: auto;
-    }
-    .message-item-admin {
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      background: rgba(255, 255, 255, 0.02);
-    }
-    .small {
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.6);
-    }
-    .btn {
-      padding: 9px 15px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 500;
-      display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.2s;
+      flex-shrink: 0;
     }
-    .btn-primary {
-      background: var(--accent, #c70039);
-      color: #fff;
+
+    /* Mobile & Tablet Responsive */
+    @media (max-width: 1024px) {
+      .admin-grid {
+        grid-template-columns: 1fr;
+      }
+      .nav-links {
+        display: none;
+      }
     }
-    .btn-primary:hover {
-      background: #a5002f;
-    }
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
-    }
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.14);
-    }
-    .btn-danger {
-      background: rgba(220, 38, 38, 0.2);
-      color: #fca5a5;
-      border: 1px solid rgba(220, 38, 38, 0.4);
-    }
-    .btn-danger:hover {
-      background: #dc2626;
-      color: #fff;
-    }
-    .btn-view {
-      background: rgba(59, 130, 246, 0.15);
-      color: #93c5fd;
-      text-decoration: none;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-    }
-    .btn-view:hover {
-      background: #2563eb;
-      color: #fff;
-    }
-    .image-preview {
-      width: 100%;
-      max-height: 180px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-top: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(0, 0, 0, 0.2);
-    }
-    label.file-label {
-      display: block;
-      margin-top: 8px;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 13px;
-    }
-    .file-input-wrap {
-      margin-top: 4px;
+    @media (max-width: 640px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      .image-upload-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .preview-thumb-wrap {
+        width: 100%;
+        height: 120px;
+      }
+      .admin-main {
+        padding: 16px 14px 40px;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Admin Top Navigation Bar -->
+
+  <!-- Top Navigation -->
   <header class="admin-navbar">
-    <div class="admin-nav-inner">
-      <a href="/admin/panel.html" class="admin-brand">
+    <div class="nav-container">
+      <a href="/admin/panel.html" class="brand">
         <img src="/assets/images/logo.png" alt="Logo" onerror="this.src='/assets/images/default.png'">
-        <span>Cenk Özatıcı <small style="font-weight:400;opacity:0.7">Admin</small></span>
+        <span class="brand-title">Cenk Özatıcı</span>
+        <span class="brand-badge">Yönetici Paneli</span>
       </a>
-      <ul class="admin-nav-links">
-        <li><a href="/index.html" target="_blank" rel="noopener"><i class="fa fa-arrow-up-right-from-square"></i> Siteyi Gör</a></li>
-        <li><a href="/news.html" target="_blank" rel="noopener"><i class="fa fa-newspaper"></i> Haberler</a></li>
-        <li><a href="/about.html" target="_blank" rel="noopener"><i class="fa fa-user"></i> Özgeçmiş</a></li>
+
+      <ul class="nav-links">
+        <li><a href="/index.html" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Siteyi Gör</a></li>
+        <li><a href="/news.html" target="_blank" rel="noopener"><i class="fa-solid fa-newspaper"></i> Haberler</a></li>
+        <li><a href="/about.html" target="_blank" rel="noopener"><i class="fa-solid fa-user"></i> Özgeçmiş</a></li>
       </ul>
-      <div style="display:flex;align-items:center;gap:10px">
-        <a href="/index.html" class="btn btn-secondary"><i class="fa fa-globe"></i> Siteye Dön</a>
-        <button class="btn btn-danger" id="logout"><i class="fa fa-right-from-bracket"></i> Çıkış</button>
+
+      <div class="nav-actions">
+        <a href="/index.html" class="btn btn-secondary btn-sm"><i class="fa-solid fa-globe"></i> Siteye Dön</a>
+        <button class="btn btn-danger btn-sm" id="logout"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
       </div>
     </div>
   </header>
 
-  <main class="panel">
-    <div class="panel-header">
-      <h2><i class="fa fa-gauge"></i> Yönetim Paneli</h2>
-      <div class="small"><i class="fa fa-shield-halved"></i> Güvenli Yönetici Oturumu</div>
+  <!-- Main Content Layout -->
+  <main class="admin-main">
+    <div class="page-title-row">
+      <h1 class="page-title"><i class="fa-solid fa-gauge-high"></i> Yönetim Paneli</h1>
+      <div class="user-pill">
+        <span class="dot"></span>
+        <span>Yönetici Oturumu Açık (cenk)</span>
+      </div>
     </div>
 
-    <div class="grid">
-      <!-- Main Content Column -->
-      <div>
+    <div class="admin-grid">
+      <!-- Left Column: Main Form & Messages -->
+      <div class="col-main">
+
+        <!-- News Form Card -->
         <div class="card">
-          <h3><i class="fa fa-pen-to-square"></i> Haber Ekle / Düzenle</h3>
+          <div class="card-header">
+            <h2 class="card-title"><i class="fa-solid fa-pen-to-square"></i> Haber Ekle / Düzenle</h2>
+            <button type="button" id="toggle-news-list" class="btn btn-secondary btn-sm">
+              <i class="fa-solid fa-list"></i> Mevcut Haberler
+            </button>
+          </div>
+
           <form id="news-form">
-            <div class="form-group">
-              <label for="titleInput">Haber Başlığı</label>
-              <input id="titleInput" name="title" placeholder="Örn: Yeni Dönem Vizyon Açıklaması" required>
-            </div>
-            <div class="form-group">
-              <label for="dateInput">Tarih</label>
-              <input id="dateInput" name="date" placeholder="GG.AA.YYYY veya 26 Nisan 2025" required>
-            </div>
-            <div class="form-group">
-              <label for="imageInput">Görsel URL (İsteğe bağlı)</label>
-              <input id="imageInput" name="image" placeholder="https://... veya /assets/images/...">
-              <label class="file-label" for="imageFile">
-                <i class="fa fa-upload"></i> Veya bilgisayarınızdan resim yükleyin:
-              </label>
-              <div class="file-input-wrap">
-                <input type="file" id="imageFile" accept="image/*">
+            <div class="form-row">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label" for="titleInput">Haber Başlığı</label>
+                <input id="titleInput" name="title" placeholder="Örn: Yeni Dönem Vizyon Açıklaması" required>
               </div>
-              <img id="image-preview" class="image-preview" src="/assets/images/default.png" alt="Önizleme">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label" for="dateInput">Tarih</label>
+                <input id="dateInput" name="date" placeholder="26 Nisan 2025" required>
+              </div>
             </div>
+
+            <!-- Compact Image Selector -->
             <div class="form-group">
-              <label for="excerptInput">Kısa Özet</label>
-              <textarea id="excerptInput" name="excerpt" placeholder="Haber kartlarında görünecek kısa özet metin..."></textarea>
+              <label class="form-label">Haber Görseli</label>
+              <div class="image-upload-section">
+                <div class="image-upload-row">
+                  <div class="preview-thumb-wrap">
+                    <img id="image-preview" src="/assets/images/default.png" alt="Önizleme">
+                  </div>
+                  <div class="upload-fields">
+                    <input id="imageInput" name="image" placeholder="Görsel URL adresi (https://... veya /assets/images/...)">
+                    <div class="custom-file-input">
+                      <span style="margin-right:6px"><i class="fa-solid fa-upload"></i> Veya bilgisayardan seç:</span>
+                      <input type="file" id="imageFile" accept="image/*">
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+
             <div class="form-group">
-              <label for="contentInput">Haber Detayı / İçerik</label>
-              <textarea id="contentInput" name="content" rows="6" placeholder="Haberin tam metni..."></textarea>
+              <label class="form-label" for="excerptInput">Kısa Özet</label>
+              <textarea id="excerptInput" name="excerpt" rows="2" placeholder="Haber kartında ve önizlemede görünecek kısa açıklama..."></textarea>
             </div>
-            <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
-              <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-disk"></i> Haberi Kaydet</button>
-              <button type="button" id="clear-form" class="btn btn-secondary"><i class="fa fa-rotate-left"></i> Formu Temizle</button>
-              <button type="button" id="toggle-news-list" class="btn btn-secondary" style="margin-left:auto"><i class="fa fa-eye-slash"></i> Mevcut Haberleri Göster</button>
+
+            <div class="form-group">
+              <label class="form-label" for="contentInput">Haber Detayı / İçerik</label>
+              <textarea id="contentInput" name="content" rows="6" placeholder="Haberin tam içeriği ve açıklaması..."></textarea>
+            </div>
+
+            <div style="display:flex;gap:10px;margin-top:18px">
+              <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Haberi Kaydet</button>
+              <button type="button" id="clear-form" class="btn btn-secondary"><i class="fa-solid fa-rotate-left"></i> Temizle</button>
             </div>
           </form>
         </div>
 
-        <!-- Mevcut Haberler bölümü (varsayılan olarak gizlendi) -->
-        <div style="margin-top:20px;display:none" class="card" id="news-list-card">
-          <h3><i class="fa fa-list-check"></i> Mevcut Haberler</h3>
+        <!-- Hidden News List Card (Toggled via button) -->
+        <div class="card" id="news-list-card" style="display:none">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fa-solid fa-newspaper"></i> Yayındaki Haberler</h2>
+            <span class="custom-file-input">Kayıtlı haberler listesi</span>
+          </div>
           <div id="news-list-admin" class="news-list-admin"></div>
         </div>
 
-        <div style="margin-top:20px" class="card">
-          <h3><i class="fa fa-envelope"></i> İletişim Formu Mesajları</h3>
-          <div id="messages-list-admin" class="messages-list-admin"></div>
+        <!-- Contact Messages Card -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fa-solid fa-envelope"></i> Gelen İletişim Mesajları</h2>
+            <div style="display:flex;gap:8px">
+              <button type="button" class="btn btn-primary btn-sm" id="print-messages-btn"><i class="fa-solid fa-print"></i> Mesajları Yazdır / PDF</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="refresh-messages-btn"><i class="fa-solid fa-rotate"></i> Yenile</button>
+            </div>
+          </div>
+          <div id="messages-list-admin" class="messages-list-admin">
+            <div class="custom-file-input" style="padding:10px">Yükleniyor...</div>
+          </div>
         </div>
+
       </div>
 
-      <!-- Right Column: Sidebar Settings -->
-      <aside>
+      <!-- Right Column: Live Broadcast & Quick Links -->
+      <aside class="col-sidebar">
+
+        <!-- Live Broadcast Card -->
         <div class="card">
-          <h3><i class="fa fa-tower-broadcast"></i> Canlı Yayın Ayarları</h3>
+          <div class="card-header">
+            <h2 class="card-title"><i class="fa-solid fa-tower-broadcast" style="color:#ef4444"></i> Canlı Yayın Ayarları</h2>
+          </div>
           <form id="live-form">
             <div class="form-group">
-              <label for="liveChannel">Kanal / Program Adı</label>
+              <label class="form-label" for="liveChannel">Kanal / Program</label>
               <input id="liveChannel" placeholder="Örn: Halk TV - Gündem Özel">
             </div>
             <div class="form-group">
-              <label for="liveDateTime">Yayın Tarih & Saati</label>
+              <label class="form-label" for="liveDateTime">Yayın Zamanı</label>
               <input id="liveDateTime" type="datetime-local">
             </div>
             <div class="form-group">
-              <label for="liveUrl">Yayın Linki (YouTube / Detay URL)</label>
-              <input id="liveUrl" placeholder="https://youtube.com/... veya news.html">
+              <label class="form-label" for="liveUrl">Canlı Yayın Linki</label>
+              <input id="liveUrl" placeholder="https://youtube.com/live/... veya news.html">
             </div>
-            <div style="margin-top:16px;display:flex;gap:8px">
-              <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Yayını Kaydet</button>
-              <button type="button" id="live-clear" class="btn btn-secondary"><i class="fa fa-trash"></i> Temizle</button>
+            <div style="display:flex;gap:8px;margin-top:16px">
+              <button type="submit" class="btn btn-primary" style="flex:1"><i class="fa-solid fa-check"></i> Kaydet</button>
+              <button type="button" id="live-clear" class="btn btn-secondary"><i class="fa-solid fa-trash"></i></button>
             </div>
-            <div class="small" style="margin-top:12px;line-height:1.5">
-              <i class="fa fa-circle-info"></i> Bu ayarlar ana sayfadaki geri sayım sayacında ve canlı yayın modülünde anlık gösterilir.
+            <div class="custom-file-input" style="margin-top:12px;line-height:1.5;font-size:12px">
+              <i class="fa-solid fa-circle-info"></i> Bu ayar ana sayfadaki geri sayım sayacını ve canlı yayın bildirimini anlık günceller.
             </div>
           </form>
         </div>
 
-        <div class="card" style="margin-top:20px">
-          <h3><i class="fa fa-link"></i> Hızlı Bağlantılar</h3>
-          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px">
-            <li><a href="/index.html" class="btn btn-secondary" style="width:100%;box-sizing:border-box" target="_blank"><i class="fa fa-house"></i> Ana Sayfayı Aç</a></li>
-            <li><a href="/news.html" class="btn btn-secondary" style="width:100%;box-sizing:border-box" target="_blank"><i class="fa fa-newspaper"></i> Haberler Sayfası</a></li>
-            <li><a href="/about.html" class="btn btn-secondary" style="width:100%;box-sizing:border-box" target="_blank"><i class="fa fa-user"></i> Özgeçmiş Sayfası</a></li>
-            <li><a href="/login" class="btn btn-secondary" style="width:100%;box-sizing:border-box"><i class="fa fa-key"></i> Giriş Sayfası (/login)</a></li>
+        <!-- Quick Links Card -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fa-solid fa-compass"></i> Hızlı Bağlantılar</h2>
+          </div>
+          <ul class="quick-links-list">
+            <li>
+              <a href="/index.html" class="quick-link-item" target="_blank">
+                <span><i class="fa-solid fa-house" style="margin-right:8px;color:#38bdf8"></i> Ana Sayfa</span>
+                <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;color:var(--muted)"></i>
+              </a>
+            </li>
+            <li>
+              <a href="/news.html" class="quick-link-item" target="_blank">
+                <span><i class="fa-solid fa-newspaper" style="margin-right:8px;color:#f59e0b"></i> Haberler Sayfası</span>
+                <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;color:var(--muted)"></i>
+              </a>
+            </li>
+            <li>
+              <a href="/about.html" class="quick-link-item" target="_blank">
+                <span><i class="fa-solid fa-user-tie" style="margin-right:8px;color:#ec4899"></i> Özgeçmiş Sayfası</span>
+                <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;color:var(--muted)"></i>
+              </a>
+            </li>
+            <li>
+              <a href="/login" class="quick-link-item">
+                <span><i class="fa-solid fa-key" style="margin-right:8px;color:#10b981"></i> Giriş Ekranı (/login)</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:11px;color:var(--muted)"></i>
+              </a>
+            </li>
           </ul>
         </div>
 
-        <div class="card" style="margin-top:20px">
-          <h3><i class="fa fa-circle-question"></i> Bilgi & Durum</h3>
-          <p class="small" style="line-height:1.6;margin:0">
-            Verileriniz API / Veritabanı üzerinden yönetilmektedir. Yayınlanan haberler sitede anında güncellenir.
+        <!-- System Info Card -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fa-solid fa-shield-halved" style="color:#22c55e"></i> Sistem Bilgisi</h2>
+          </div>
+          <p style="font-size:12.5px;line-height:1.6;color:var(--muted)">
+            Yönetim paneli üzerinden eklenen tüm veriler veritabanına ve sitedeki ilgili bölümlere eş zamanlı aktarılır.
           </p>
         </div>
+
       </aside>
     </div>
   </main>
